@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace DBublik\UnusedClass;
 
 use DBublik\UnusedClass\Filter\AttributeFilter;
-use DBublik\UnusedClass\Filter\AutoconfigureTagAttributeFilter;
 use DBublik\UnusedClass\Filter\ClassFilter;
-use DBublik\UnusedClass\Filter\CodeceptionTestFilter;
 use DBublik\UnusedClass\Filter\FilterInterface;
+use DBublik\UnusedClass\Sets\AbstractSet;
+use DBublik\UnusedClass\Sets\CodeceptionSet;
+use DBublik\UnusedClass\Sets\DoctrineSet;
+use DBublik\UnusedClass\Sets\PhpunitSet;
+use DBublik\UnusedClass\Sets\SymfonySet;
+use DBublik\UnusedClass\Sets\TwigSet;
 use Symfony\Component\Finder\Finder;
 
 final class Config
@@ -17,19 +21,19 @@ final class Config
     private string $cacheDir;
 
     /**
-     * @var array<class-string, FilterInterface>
+     * @var iterable<class-string, FilterInterface>
      */
-    private array $filters = [];
+    private iterable $filters = [];
 
     /**
-     * @var array<class-string>
+     * @var iterable<class-string>
      */
-    private array $ignoredClasses = [];
+    private iterable $ignoredClasses = [];
 
     /**
-     * @var array<class-string>
+     * @var iterable<class-string>
      */
-    private array $ignoredAttributes = [];
+    private iterable $ignoredAttributes = [];
 
     public function __construct()
     {
@@ -68,9 +72,9 @@ final class Config
     }
 
     /**
-     * @return array<class-string, FilterInterface>
+     * @return iterable<class-string, FilterInterface>
      */
-    public function getFilters(): array
+    public function getFilters(): iterable
     {
         return $this->filters;
     }
@@ -99,9 +103,9 @@ final class Config
     }
 
     /**
-     * @return array<class-string>
+     * @return iterable<class-string>
      */
-    public function getIgnoredClasses(): array
+    public function getIgnoredClasses(): iterable
     {
         return array_unique($this->ignoredClasses);
     }
@@ -117,9 +121,9 @@ final class Config
     }
 
     /**
-     * @return array<class-string>
+     * @return iterable<class-string>
      */
-    public function getIgnoredAttributes(): array
+    public function getIgnoredAttributes(): iterable
     {
         return array_unique($this->ignoredAttributes);
     }
@@ -141,36 +145,27 @@ final class Config
         bool $phpunit = false,
         bool $codeception = false,
     ): self {
-        if ($symfony) {
-            $this->addFilter(new AutoconfigureTagAttributeFilter());
-            $this->withIgnoredClasses([
-                'Symfony\Component\EventDispatcher\EventSubscriberInterface',
-                'Symfony\Component\Form\FormTypeExtensionInterface',
-                'Symfony\Component\Validator\ConstraintValidatorInterface',
-            ]);
-            $this->withIgnoredAttributes([
-                'Symfony\Component\Console\Attribute\AsCommand',
-                'Symfony\Component\Routing\Attribute\Route',
-            ]);
-        }
+        $sets = [
+            new SymfonySet(),
+            new DoctrineSet(),
+            new TwigSet(),
+            new PhpunitSet(),
+            new CodeceptionSet(),
+        ];
 
-        if ($doctrine) {
-            $this->withIgnoredAttributes(['Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener']);
-        }
-
-        if ($twig) {
-            $this->withIgnoredClasses(['Twig\Extension\ExtensionInterface']);
-        }
-
-        if ($phpunit) {
-            $this->withIgnoredClasses(['PHPUnit\Framework\TestCase']);
-        }
-
-        if ($codeception) {
-            $this->addFilter(new CodeceptionTestFilter());
-            $this->withIgnoredClasses(['Codeception\Module']);
+        foreach (func_get_args() as $key => $isEnabled) {
+            if ($isEnabled) {
+                $this->withSet($sets[$key]);
+            }
         }
 
         return $this;
+    }
+
+    public function withSet(AbstractSet $set): void
+    {
+        $this->withFilters($set->getFilters());
+        $this->withIgnoredClasses($set->getIgnoredClasses());
+        $this->withIgnoredAttributes($set->getIgnoredAttributes());
     }
 }
