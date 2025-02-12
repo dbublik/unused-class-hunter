@@ -1,0 +1,53 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.php]
+ij_php_align_multiline_extends_list = true
+ij_php_align_multiline_parameters = false
+ij_php_array_initializer_new_line_after_left_brace = true
+ij_php_array_initializer_right_brace_on_new_line = true
+ij_php_array_initializer_wrap = on_every_item
+ij_php_blank_lines_after_opening_tag = 1
+ij_php_blank_lines_after_package = 1
+ij_php_blank_lines_before_return_statement = 1
+ij_php_blank_lines_between_imports = 1
+ij_php_call_parameters_new_line_after_left_paren = true
+ij_php_call_parameters_right_paren_on_new_line = true
+ij_php_call_parameters_wrap = on_every_item
+ij_php_comma_after_last_array_element = true
+ij_php_do_while_brace_force = always
+ij_php_else_if_style = combine
+ij_php_extends_list_wrap = on_every_item
+ij_php_for_brace_force = always
+ij_php_for_statement_new_line_after_left_paren = true
+ij_php_for_statement_right_paren_on_new_line = true
+ij_php_force_empty_methods_in_one_line = true
+ij_php_force_short_declaration_array_style = true
+ij_php_if_brace_force = always
+ij_php_keep_blank_lines_after_lbrace = 0
+ij_php_keep_blank_lines_before_right_brace = 0
+ij_php_keep_blank_lines_in_code = 1
+ij_php_keep_blank_lines_in_declarations = 1
+ij_php_keep_rparen_and_lbrace_on_one_line = true
+ij_php_keep_simple_classes_in_one_line = true
+ij_php_lower_case_boolean_const = true
+ij_php_lower_case_null_const = true
+ij_php_method_parameters_new_line_after_left_paren = true
+ij_php_method_parameters_right_paren_on_new_line = true
+ij_php_method_parameters_wrap = on_every_item
+ij_php_new_line_after_php_opening_tag = true
+ij_php_phpdoc_blank_line_before_tags = true
+ij_php_phpdoc_blank_lines_around_parameters = true
+ij_php_sort_phpdoc_elements = false
+ij_php_space_after_type_cast = true
+ij_php_space_before_short_closure_left_parenthesis = true
+ij_php_spaces_around_assignment_in_declare = false
+ij_php_variable_naming_style = camel_case
+ij_php_while_brace_force = always

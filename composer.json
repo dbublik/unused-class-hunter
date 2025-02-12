@@ -1,0 +1,41 @@
+{
+    "name": "dbublik/unused-class-hunter",
+    "description": "Detects unused classes in your codebase",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Aleksei Kuznetsov",
+            "email": "deadbublik@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "nikic/php-parser": "^5.4",
+        "symfony/console": "^7.2",
+        "symfony/filesystem": "^7.2",
+        "symfony/finder": "^7.2"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.45"
+    },
+    "autoload": {
+        "psr-4": {
+            "DBublik\\UnusedClass\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DBublik\\UnusedClass\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/unused-class-hunter"
+    ],
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        },
+        "sort-packages": true
+    }
+}

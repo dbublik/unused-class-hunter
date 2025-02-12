@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use DBublik\UnusedClass\Console\Application;
+
+// check environment requirements
+(static function (): void {
+    if (\PHP_VERSION_ID < 80300) {
+        fwrite(STDERR, "PHP needs to be a minimum version of PHP 8.2.0.\n");
+        fwrite(STDERR, 'Current PHP version: ' . \PHP_VERSION . ".\n");
+        fwrite(STDERR, "Update PHP version to unblock execution.\n");
+
+        exit(1);
+    }
+})();
+
+// load dependencies
+(static function (): void {
+    require_once __DIR__ . '/../vendor/autoload.php';
+
+    if (file_exists($autoloadFile = __DIR__ . '/../../../autoload.php')) {
+        require_once $autoloadFile;
+    }
+})();
+
+$application = new Application();
+$application->run();
