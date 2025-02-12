@@ -157,3 +157,7 @@ return (new Config())
         codeception: true,
     );
 ```
+
+## Supported PHP versions
+
+PHP 8.3 and later.
