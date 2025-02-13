@@ -21,12 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "DBublik\\UnusedClass\\": "src/"
+            "DBublik\\UnusedClassHunter\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DBublik\\UnusedClass\\Tests\\": "tests/"
+            "DBublik\\UnusedClassHunter\\Tests\\": "tests/"
         }
     },
     "bin": [

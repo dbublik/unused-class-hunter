@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Console\Command;
+namespace DBublik\UnusedClassHunter\Console\Command;
 
-use DBublik\UnusedClass\Config;
-use DBublik\UnusedClass\Console\Reporter\ReportFactory;
-use DBublik\UnusedClass\UnusedClassFinder;
+use DBublik\UnusedClassHunter\Config;
+use DBublik\UnusedClassHunter\Console\Reporter\ReportFactory;
+use DBublik\UnusedClassHunter\UnusedClassFinder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

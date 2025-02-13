@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Parser;
+namespace DBublik\UnusedClassHunter\Parser;
 
-use DBublik\UnusedClass\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;

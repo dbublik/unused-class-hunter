@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Cache;
+namespace DBublik\UnusedClassHunter\Cache;
 
-use DBublik\UnusedClass\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 use Symfony\Component\Filesystem\Filesystem;
 
 final readonly class Cache

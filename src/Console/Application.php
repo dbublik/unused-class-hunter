@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Console;
+namespace DBublik\UnusedClassHunter\Console;
 
-use DBublik\UnusedClass\Console\Command\CheckCommand;
+use DBublik\UnusedClassHunter\Console\Command\CheckCommand;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Command\ListCommand;

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass;
+namespace DBublik\UnusedClassHunter;
 
-use DBublik\UnusedClass\Cache\Cache;
-use DBublik\UnusedClass\Parser\FileParser;
-use DBublik\UnusedClass\ValueObject\FileInformation;
-use DBublik\UnusedClass\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\Cache\Cache;
+use DBublik\UnusedClassHunter\Parser\FileParser;
+use DBublik\UnusedClassHunter\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 final readonly class UnusedClassFinder

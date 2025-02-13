@@ -30,7 +30,7 @@ In this case you can help it by creating a configuration file `.unused-class-hun
 
 declare(strict_types=1);
 
-use DBublik\UnusedClass\Config;
+use DBublik\UnusedClassHunter\Config;
 use Symfony\Component\Finder\Finder;
 
 $finder = Finder::create()
@@ -56,7 +56,7 @@ The first two are to specify the classes or the attributes of these classes in t
 
 declare(strict_types=1);
 
-use DBublik\UnusedClass\Config;
+use DBublik\UnusedClassHunter\Config;
 use Symfony\Component\Finder\Finder;
 
 $finder = Finder::create()
@@ -82,10 +82,10 @@ declare(strict_types=1);
 
 namespace ExampleNamespace\Filter;
 
-use DBublik\UnusedClass\Config;
-use DBublik\UnusedClass\Filter\FilterInterface;
-use DBublik\UnusedClass\ValueObject\FileInformation;
-use DBublik\UnusedClass\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\Config;
+use DBublik\UnusedClassHunter\Filter\FilterInterface;
+use DBublik\UnusedClassHunter\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
 
 final readonly class ExampleFilter implements FilterInterface
 {
@@ -101,7 +101,7 @@ final readonly class ExampleFilter implements FilterInterface
 
 declare(strict_types=1);
 
-use DBublik\UnusedClass\Config;
+use DBublik\UnusedClassHunter\Config;
 use Symfony\Component\Finder\Finder;
 
 $finder = Finder::create()
@@ -121,7 +121,7 @@ return (new Config())
 
 declare(strict_types=1);
 
-use DBublik\UnusedClass\Config;
+use DBublik\UnusedClassHunter\Config;
 use Symfony\Component\Finder\Finder;
 
 $finder = Finder::create()
@@ -141,7 +141,7 @@ The Hunter contains several predefined sets for different libraries, which can b
 
 declare(strict_types=1);
 
-use DBublik\UnusedClass\Config;
+use DBublik\UnusedClassHunter\Config;
 use Symfony\Component\Finder\Finder;
 
 $finder = Finder::create()

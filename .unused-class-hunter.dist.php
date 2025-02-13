@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use DBublik\UnusedClass\Config;
+use DBublik\UnusedClassHunter\Config;
 
 return (new Config())
     ->setCacheDir(__DIR__ . '/var/cache/unused-class-hunter')

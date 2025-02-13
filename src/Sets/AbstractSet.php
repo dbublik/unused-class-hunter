@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Sets;
+namespace DBublik\UnusedClassHunter\Sets;
 
-use DBublik\UnusedClass\Filter\FilterInterface;
+use DBublik\UnusedClassHunter\Filter\FilterInterface;
 
 abstract readonly class AbstractSet
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Parser;
+namespace DBublik\UnusedClassHunter\Parser;
 
-use DBublik\UnusedClass\Cache\Cache;
-use DBublik\UnusedClass\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\Cache\Cache;
+use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 
 final readonly class FileParser
 {

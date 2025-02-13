@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\ValueObject;
+namespace DBublik\UnusedClassHunter\ValueObject;
 
 final class FileInformation implements \JsonSerializable
 {

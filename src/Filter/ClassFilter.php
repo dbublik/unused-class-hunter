@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Filter;
+namespace DBublik\UnusedClassHunter\Filter;
 
-use DBublik\UnusedClass\Config;
-use DBublik\UnusedClass\ValueObject\FileInformation;
-use DBublik\UnusedClass\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\Config;
+use DBublik\UnusedClassHunter\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
 
 final class ClassFilter implements FilterInterface
 {

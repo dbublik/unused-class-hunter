@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Sets;
+namespace DBublik\UnusedClassHunter\Sets;
 
-use DBublik\UnusedClass\Filter\CodeceptionTestFilter;
-use DBublik\UnusedClass\Filter\FilterInterface;
+use DBublik\UnusedClassHunter\Filter\CodeceptionTestFilter;
+use DBublik\UnusedClassHunter\Filter\FilterInterface;
 
 final readonly class CodeceptionSet extends AbstractSet
 {

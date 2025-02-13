@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Sets;
+namespace DBublik\UnusedClassHunter\Sets;
 
 final readonly class DoctrineSet extends AbstractSet
 {

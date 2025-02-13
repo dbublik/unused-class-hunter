@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass;
+namespace DBublik\UnusedClassHunter;
 
-use DBublik\UnusedClass\Filter\AttributeFilter;
-use DBublik\UnusedClass\Filter\ClassFilter;
-use DBublik\UnusedClass\Filter\FilterInterface;
-use DBublik\UnusedClass\Sets\AbstractSet;
-use DBublik\UnusedClass\Sets\CodeceptionSet;
-use DBublik\UnusedClass\Sets\DoctrineSet;
-use DBublik\UnusedClass\Sets\PhpunitSet;
-use DBublik\UnusedClass\Sets\SymfonySet;
-use DBublik\UnusedClass\Sets\TwigSet;
+use DBublik\UnusedClassHunter\Filter\AttributeFilter;
+use DBublik\UnusedClassHunter\Filter\ClassFilter;
+use DBublik\UnusedClassHunter\Filter\FilterInterface;
+use DBublik\UnusedClassHunter\Sets\AbstractSet;
+use DBublik\UnusedClassHunter\Sets\CodeceptionSet;
+use DBublik\UnusedClassHunter\Sets\DoctrineSet;
+use DBublik\UnusedClassHunter\Sets\PhpunitSet;
+use DBublik\UnusedClassHunter\Sets\SymfonySet;
+use DBublik\UnusedClassHunter\Sets\TwigSet;
 use Symfony\Component\Finder\Finder;
 
 final class Config

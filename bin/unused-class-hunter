@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-use DBublik\UnusedClass\Console\Application;
+use DBublik\UnusedClassHunter\Console\Application;
 
 // check environment requirements
 (static function (): void {

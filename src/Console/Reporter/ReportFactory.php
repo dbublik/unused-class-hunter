@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Console\Reporter;
+namespace DBublik\UnusedClassHunter\Console\Reporter;
 
 final readonly class ReportFactory
 {

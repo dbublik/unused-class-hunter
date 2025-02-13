@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClass\Console\Reporter;
+namespace DBublik\UnusedClassHunter\Console\Reporter;
 
-use DBublik\UnusedClass\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 
 final readonly class TextReporter implements ReporterInterface
 {
