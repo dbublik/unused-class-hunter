@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DBublik\UnusedClass\Filter;
 
 use DBublik\UnusedClass\Config;

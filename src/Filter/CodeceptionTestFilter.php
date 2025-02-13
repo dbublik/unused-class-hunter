@@ -17,7 +17,7 @@ final readonly class CodeceptionTestFilter implements FilterInterface
         }
 
         $extends = $class->getExtends();
-        $count = count($extends);
+        $count = \count($extends);
 
         return (0 === $count)
             || (1 === $count && str_ends_with($extends[0], 'Cest'));

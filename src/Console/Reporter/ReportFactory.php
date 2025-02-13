@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClass\Console\Reporter;
 
-use InvalidArgumentException;
-
 final readonly class ReportFactory
 {
     /**
@@ -29,6 +27,6 @@ final readonly class ReportFactory
             }
         }
 
-        throw new InvalidArgumentException('Unsupported format.');
+        throw new \InvalidArgumentException('Unsupported format.');
     }
 }

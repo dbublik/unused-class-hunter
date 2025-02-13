@@ -17,7 +17,6 @@
         "symfony/finder": "^7.2"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "^2.45",
         "phpunit/phpunit": "^12.0"
     },
     "autoload": {
@@ -34,9 +33,23 @@
         "bin/unused-class-hunter"
     ],
     "config": {
-        "allow-plugins": {
-            "ergebnis/composer-normalize": true
-        },
         "sort-packages": true
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@install-tools"
+        ],
+        "cs": "@php tools/vendor/bin/php-cs-fixer fix",
+        "cs:check": "@php tools/vendor/bin/php-cs-fixer check --verbose --diff",
+        "install-tools": "@composer --working-dir=tools install",
+        "normalize": [
+            "@composer normalize --working-dir=tools ../composer.json",
+            "@composer normalize --working-dir=tools composer.json"
+        ],
+        "normalize:check": [
+            "@composer normalize --working-dir=tools --dry-run ../composer.json",
+            "@composer normalize --working-dir=tools --dry-run composer.json"
+        ],
+        "tests": "@php phpunit"
     }
 }

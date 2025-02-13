@@ -56,7 +56,7 @@ final readonly class UnusedClassFinder
     private function readFiles(SymfonyStyle $io, array $filePaths): ParseInformation
     {
         $files = [];
-        $progressBar = $io->createProgressBar(count($filePaths));
+        $progressBar = $io->createProgressBar(\count($filePaths));
 
         foreach ($filePaths as $filePath) {
             $files[] = $this->fileParser->parse($filePath);

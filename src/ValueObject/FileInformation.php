@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClass\ValueObject;
 
-use JsonSerializable;
-use LogicException;
-use Throwable;
-
-final class FileInformation implements JsonSerializable
+final class FileInformation implements \JsonSerializable
 {
     private ?string $file = null;
 
@@ -29,7 +25,7 @@ final class FileInformation implements JsonSerializable
     public static function fromData(array $data): ?self
     {
         if (
-            !array_key_exists('className', $data)
+            !\array_key_exists('className', $data)
             || !isset(
                 $data['file'],
                 $data['usedClassNames'],
@@ -53,7 +49,7 @@ final class FileInformation implements JsonSerializable
             $self->implements = $data['implements'];
             $self->attributes = $data['attributes'];
             // @phpstan-ignore catch.neverThrown
-        } catch (Throwable) {
+        } catch (\Throwable) {
             return null;
         }
 
@@ -76,7 +72,7 @@ final class FileInformation implements JsonSerializable
     public function getFile(): string
     {
         if (null === $this->file) {
-            throw new LogicException('Something broken');
+            throw new \LogicException('Something broken');
         }
 
         return $this->file;
@@ -84,7 +80,7 @@ final class FileInformation implements JsonSerializable
 
     public function getRelativeFile(): string
     {
-        return str_replace(getcwd() . DIRECTORY_SEPARATOR, '', $this->getFile());
+        return str_replace(getcwd() . \DIRECTORY_SEPARATOR, '', $this->getFile());
     }
 
     public function setFile(string $file): void

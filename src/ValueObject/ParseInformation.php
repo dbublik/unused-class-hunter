@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClass\ValueObject;
 
-use Generator;
-
 final readonly class ParseInformation
 {
     /**
@@ -56,9 +54,9 @@ final readonly class ParseInformation
     }
 
     /**
-     * @return Generator<FileInformation>
+     * @return \Generator<FileInformation>
      */
-    public function getUnusedClasses(): Generator
+    public function getUnusedClasses(): \Generator
     {
         $usedClassName = array_flip($this->usedClassNames);
 

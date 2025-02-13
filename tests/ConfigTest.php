@@ -22,6 +22,9 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Iterator\FileTypeFilterIterator;
 use Symfony\Component\Finder\Iterator\SortableIterator;
 
+/**
+ * @internal
+ */
 #[CoversClass(ConfigTest::class)]
 final class ConfigTest extends TestCase
 {
@@ -73,7 +76,7 @@ final class ConfigTest extends TestCase
     public function testWithFilters(): void
     {
         $config = new Config();
-        $customFilter = new class () implements FilterInterface {
+        $customFilter = new class implements FilterInterface {
             public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
             {
                 return false;
@@ -93,7 +96,7 @@ final class ConfigTest extends TestCase
 
         $this->expectExceptionObject(
             new \InvalidArgumentException(
-                sprintf('Filter %s must implement %s', $badFilter::class, FilterInterface::class),
+                \sprintf('Filter %s must implement %s', $badFilter::class, FilterInterface::class),
             )
         );
 
@@ -197,7 +200,7 @@ final class ConfigTest extends TestCase
     private static function assertSet(Config $config, AbstractSet $set): void
     {
         if (!empty($setFilters = $set->getFilters())) {
-            self::assertCount(2 + count($setFilters), $filters = $config->getFilters());
+            self::assertCount(2 + \count($setFilters), $filters = $config->getFilters());
 
             foreach ($setFilters as $setFilter) {
                 self::assertArrayHasKey($setFilter::class, $filters);

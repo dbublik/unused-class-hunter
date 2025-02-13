@@ -87,7 +87,7 @@ final class Config
         foreach ($filters as $filter) {
             if (!$filter instanceof FilterInterface) {
                 throw new \InvalidArgumentException(
-                    sprintf('Filter %s must implement %s', $filter::class, FilterInterface::class),
+                    \sprintf('Filter %s must implement %s', $filter::class, FilterInterface::class),
                 );
             }
 
@@ -95,11 +95,6 @@ final class Config
         }
 
         return $this;
-    }
-
-    private function addFilter(FilterInterface $filter): void
-    {
-        $this->filters[$filter::class] = $filter;
     }
 
     /**
@@ -153,7 +148,7 @@ final class Config
             new CodeceptionSet(),
         ];
 
-        foreach (func_get_args() as $key => $isEnabled) {
+        foreach (\func_get_args() as $key => $isEnabled) {
             if ($isEnabled) {
                 $this->withSet($sets[$key]);
             }
@@ -167,5 +162,10 @@ final class Config
         $this->withFilters($set->getFilters());
         $this->withIgnoredClasses($set->getIgnoredClasses());
         $this->withIgnoredAttributes($set->getIgnoredAttributes());
+    }
+
+    private function addFilter(FilterInterface $filter): void
+    {
+        $this->filters[$filter::class] = $filter;
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DBublik\UnusedClass\Cache;
 
 use DBublik\UnusedClass\ValueObject\FileInformation;
-use JsonException;
 use Symfony\Component\Filesystem\Filesystem;
 
 final readonly class Cache
@@ -27,7 +28,7 @@ final readonly class Cache
 
         try {
             $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException) {
+        } catch (\JsonException) {
             return null;
         }
 
@@ -37,7 +38,7 @@ final readonly class Cache
     public function set(string $file, FileInformation $information): void
     {
         $filePath = $this->getFileName($file);
-        $dir = dirname($filePath);
+        $dir = \dirname($filePath);
 
         if (!file_exists($dir)) {
             $this->filesystem->mkdir($dir);

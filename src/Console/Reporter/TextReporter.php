@@ -28,7 +28,7 @@ final readonly class TextReporter implements ReporterInterface
         }
 
         $output .= PHP_EOL;
-        $output .= sprintf('<error>The hunt is over! %s unused classes detected.</error>', count($unusedClasses));
+        $output .= \sprintf('<error>The hunt is over! %s unused classes detected.</error>', \count($unusedClasses));
 
         return $output . PHP_EOL . PHP_EOL;
     }

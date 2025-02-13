@@ -22,7 +22,7 @@ final readonly class GitlabReporter implements ReporterInterface
 
         foreach ($unusedClasses as $unusedClass) {
             $report[] = [
-                'description' => sprintf('The %s class is not used.', $unusedClass->getClassName()),
+                'description' => \sprintf('The %s class is not used.', $unusedClass->getClassName()),
                 'fingerprint' => md5($unusedClass->getFile()),
                 'severity' => 'minor',
                 'location' => [

@@ -53,7 +53,7 @@ final class CheckCommand extends Command
 
             if (!$config instanceof Config) {
                 $io->error(
-                    sprintf('The config file: "%s" does not return a "%s" instance.', $configPath, Config::class)
+                    \sprintf('The config file: "%s" does not return a "%s" instance.', $configPath, Config::class)
                 );
 
                 return Command::FAILURE;
