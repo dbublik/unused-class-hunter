@@ -16,6 +16,7 @@ final readonly class AutoconfigureTagAttributeFilter implements FilterInterface
         private int $maxDeep = 2,
     ) {}
 
+    #[\Override]
     public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
     {
         if ($this->hasAttribute($class)) {

@@ -50,6 +50,21 @@
             "@composer normalize --working-dir=tools --dry-run ../composer.json",
             "@composer normalize --working-dir=tools --dry-run composer.json"
         ],
+        "phpstan": "@php tools/vendor/bin/phpstan analyse",
+        "quality-assurance": [
+            "@install-tools --quiet",
+            "@self-check",
+            "@static-analysis",
+            "@tests"
+        ],
+        "self-check": [
+            "@composer dump-autoload --dry-run --optimize --strict-psr",
+            "@normalize:check"
+        ],
+        "static-analysis": [
+            "@cs:check",
+            "@phpstan"
+        ],
         "tests": "@php phpunit"
     }
 }

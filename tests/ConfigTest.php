@@ -8,12 +8,7 @@ use DBublik\UnusedClassHunter\Config;
 use DBublik\UnusedClassHunter\Filter\AttributeFilter;
 use DBublik\UnusedClassHunter\Filter\ClassFilter;
 use DBublik\UnusedClassHunter\Filter\FilterInterface;
-use DBublik\UnusedClassHunter\Sets\AbstractSet;
-use DBublik\UnusedClassHunter\Sets\CodeceptionSet;
-use DBublik\UnusedClassHunter\Sets\DoctrineSet;
-use DBublik\UnusedClassHunter\Sets\PhpunitSet;
-use DBublik\UnusedClassHunter\Sets\SymfonySet;
-use DBublik\UnusedClassHunter\Sets\TwigSet;
+use DBublik\UnusedClassHunter\Sets\SetInterface;
 use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -39,9 +34,9 @@ final class ConfigTest extends TestCase
         self::assertFinderPropertySame($finder, 'mode', FileTypeFilterIterator::ONLY_FILES);
         self::assertFinderPropertySame($finder, 'iterators', []);
         self::assertSame(sys_get_temp_dir(), $config->getCacheDir());
-        self::assertCount(2, $filters = $config->getFilters());
-        self::assertArrayHasKey(ClassFilter::class, $filters);
-        self::assertArrayHasKey(AttributeFilter::class, $filters);
+        self::assertCount(2, $config->getFilters());
+        self::assertHasFilter($config, ClassFilter::class);
+        self::assertHasFilter($config, AttributeFilter::class);
         self::assertEmpty($config->getIgnoredClasses());
         self::assertEmpty($config->getIgnoredAttributes());
     }
@@ -77,30 +72,17 @@ final class ConfigTest extends TestCase
     {
         $config = new Config();
         $customFilter = new class implements FilterInterface {
+            #[\Override]
             public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
             {
                 return false;
             }
         };
 
-        $config->withFilters([$customFilter]);
+        $config->withFilters($customFilter);
 
-        self::assertCount(3, $filters = $config->getFilters());
-        self::assertArrayHasKey($customFilter::class, $filters);
-    }
-
-    public function testExceptionWithFilters(): void
-    {
-        $config = new Config();
-        $badFilter = new class {};
-
-        $this->expectExceptionObject(
-            new \InvalidArgumentException(
-                \sprintf('Filter %s must implement %s', $badFilter::class, FilterInterface::class),
-            )
-        );
-
-        $config->withFilters([$badFilter]);
+        self::assertCount(3, $config->getFilters());
+        self::assertHasFilter($config, $customFilter::class);
     }
 
     public function testWithIgnoredClasses(): void
@@ -108,10 +90,11 @@ final class ConfigTest extends TestCase
         $config = new Config();
         $ignoredClasses = ['FirstClass', 'SecondClass', 'SecondClass', 'ThirdClass'];
 
-        $config->withIgnoredClasses($ignoredClasses);
+        // @phpstan-ignore argument.type, argument.type, argument.type, argument.type
+        $config->withIgnoredClasses(...$ignoredClasses);
 
         self::assertCount(3, $classes = $config->getIgnoredClasses());
-        self::assertSame(array_unique($ignoredClasses), $classes);
+        self::assertSame(array_unique($classes), $classes);
     }
 
     public function testWithIgnoredAttributes(): void
@@ -119,75 +102,60 @@ final class ConfigTest extends TestCase
         $config = new Config();
         $ignoredAttributes = ['FirstAttribute', 'SecondAttribute', 'SecondAttribute', 'ThirdAttribute'];
 
-        $config->withIgnoredAttributes($ignoredAttributes);
+        // @phpstan-ignore argument.type, argument.type, argument.type, argument.type
+        $config->withIgnoredAttributes(...$ignoredAttributes);
 
         self::assertCount(3, $attributes = $config->getIgnoredAttributes());
-        self::assertSame(array_unique($ignoredAttributes), $attributes);
+        self::assertSame(array_unique($attributes), $attributes);
     }
 
-    public function testWithSymfonySet(): void
-    {
-        $config = new Config();
-
-        $config->withSets(symfony: true);
-
-        self::assertSet($config, new SymfonySet());
-    }
-
-    public function testWithDoctrineSet(): void
-    {
-        $config = new Config();
-
-        $config->withSets(doctrine: true);
-
-        self::assertSet($config, new DoctrineSet());
-    }
-
-    public function testWithTwigSet(): void
-    {
-        $config = new Config();
-
-        $config->withSets(twig: true);
-
-        self::assertSet($config, new TwigSet());
-    }
-
-    public function testWithPhpunitSet(): void
+    public function testWithSets(): void
     {
         $config = new Config();
 
         $config->withSets(phpunit: true);
 
-        self::assertSet($config, new PhpunitSet());
-    }
-
-    public function testWithCodeceptionSet(): void
-    {
-        $config = new Config();
-
-        $config->withSets(codeception: true);
-
-        self::assertSet($config, new CodeceptionSet());
+        self::assertCount(2, $config->getFilters());
+        self::assertSame(['PHPUnit\Framework\TestCase'], $config->getIgnoredClasses());
+        self::assertEmpty($config->getIgnoredAttributes());
     }
 
     public function testWithCustomSet(): void
     {
         $config = new Config();
-        $customSet = new readonly class extends AbstractSet {
-            public function getIgnoredClasses(): iterable
+        $customSet = new readonly class implements SetInterface {
+            #[\Override]
+            public function __invoke(Config $config): void
             {
-                return ['FirstClass'];
-            }
-
-            public function getIgnoredAttributes(): iterable
-            {
-                return ['FirstAttribute'];
+                // @phpstan-ignore argument.type
+                $config->withIgnoredClasses('FirstClass');
+                // @phpstan-ignore argument.type
+                $config->withIgnoredAttributes('FirstAttribute');
             }
         };
 
         $config->withSet($customSet);
 
-        self::assertSet($config, $customSet);
+        self::assertCount(2, $config->getFilters());
+        self::assertSame(['FirstClass'], $config->getIgnoredClasses());
+        self::assertSame(['FirstAttribute'], $config->getIgnoredAttributes());
+    }
+
+    /**
+     * @param class-string<FilterInterface> $filterClass
+     */
+    private static function assertHasFilter(Config $config, string $filterClass): void
+    {
+        $isExists = false;
+        foreach ($config->getFilters() as $filter) {
+            if ($filter instanceof $filterClass) {
+                $isExists = true;
+
+                break;
+            }
+        }
+
+        self::assertTrue($isExists);
     }
 
     private static function assertFinderPropertySame(Finder $finder, string $property, mixed $expected): void
@@ -195,30 +163,5 @@ final class ConfigTest extends TestCase
         $property = new \ReflectionProperty($finder, $property);
 
         self::assertSame($expected, $property->getValue($finder));
-    }
-
-    private static function assertSet(Config $config, AbstractSet $set): void
-    {
-        if (!empty($setFilters = $set->getFilters())) {
-            self::assertCount(2 + \count($setFilters), $filters = $config->getFilters());
-
-            foreach ($setFilters as $setFilter) {
-                self::assertArrayHasKey($setFilter::class, $filters);
-            }
-        }
-
-        if (!empty($setIgnoredClasses = $set->getIgnoredClasses())) {
-            self::assertSame(
-                iterator_to_array($setIgnoredClasses),
-                iterator_to_array($config->getIgnoredClasses())
-            );
-        }
-
-        if (!empty($setIgnoredAttributes = $set->getIgnoredAttributes())) {
-            self::assertSame(
-                iterator_to_array($setIgnoredAttributes),
-                iterator_to_array($config->getIgnoredAttributes())
-            );
-        }
     }
 }

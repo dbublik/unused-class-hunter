@@ -21,6 +21,7 @@ final class Application extends BaseApplication
         $this->add(new CheckCommand());
     }
 
+    #[\Override]
     protected function getDefaultCommands(): array
     {
         return [new HelpCommand(), new ListCommand()];

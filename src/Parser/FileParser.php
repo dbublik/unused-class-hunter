@@ -31,6 +31,10 @@ final readonly class FileParser
     {
         $code = file_get_contents($filePath);
 
+        if (false === $code) {
+            throw new \RuntimeException(\sprintf('Unable to read file %s', $filePath));
+        }
+
         $file = $this->parser->parse($code);
         $file->setFile($filePath);
 

@@ -32,6 +32,7 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
      *
      * @return Node[]
      */
+    #[\Override]
     public function beforeTraverse(array $nodes): array
     {
         $this->information = new FileInformation();
@@ -39,6 +40,7 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
         return $nodes;
     }
 
+    #[\Override]
     public function enterNode(Node $node): ?int
     {
         if ($node instanceof ConstFetch) {
@@ -73,7 +75,13 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
         }
 
         $this->information->setClassName($namespace->toString());
-        $this->information->setClassStartLine((int) $node->getAttribute('startLine'));
+
+        if (
+            is_numeric($startLine = $node->getAttribute('startLine'))
+            && (int) $startLine > 0
+        ) {
+            $this->information->setClassStartLine((int) $startLine);
+        }
 
         if ($node instanceof Class_) {
             if ($node->extends instanceof Name) {

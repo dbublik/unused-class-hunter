@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Sets;
 
-final readonly class PhpunitSet extends AbstractSet
+use DBublik\UnusedClassHunter\Config;
+
+final readonly class PhpunitSet implements SetInterface
 {
-    /**
-     * @return iterable<class-string>
-     */
-    public function getIgnoredClasses(): iterable
+    #[\Override]
+    public function __invoke(Config $config): void
     {
-        return [
-            'PHPUnit\Framework\TestCase',
-        ];
+        $config->withIgnoredClasses('PHPUnit\Framework\TestCase');
     }
 }

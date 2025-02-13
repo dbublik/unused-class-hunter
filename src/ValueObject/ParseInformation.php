@@ -16,12 +16,14 @@ final readonly class ParseInformation
      */
     private array $classes;
 
+    /**
+     * @param list<FileInformation> $files
+     */
     public function __construct(array $files)
     {
         $usedClassNames = [];
         $classes = [];
 
-        /** @var FileInformation $file */
         foreach ($files as $file) {
             $usedClassNames[] = $file->getUsedClassNames();
 
@@ -37,6 +39,9 @@ final readonly class ParseInformation
         $this->classes = $classes;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getUsedClassNames(): array
     {
         return $this->usedClassNames;

@@ -8,20 +8,25 @@ final class FileInformation implements \JsonSerializable
 {
     private ?string $file = null;
 
-    /** @var string[] */
+    /** @var list<string> */
     private array $usedClassNames = [];
     private ?string $className = null;
+
+    /** @var non-negative-int */
     private int $classStartLine = 0;
 
-    /** @var string[] */
+    /** @var list<string> */
     private array $extends = [];
 
-    /** @var string[] */
+    /** @var list<string> */
     private array $implements = [];
 
-    /** @var string[] */
+    /** @var list<string> */
     private array $attributes = [];
 
+    /**
+     * @phpstan-ignore missingType.iterableValue
+     */
     public static function fromData(array $data): ?self
     {
         if (
@@ -56,6 +61,18 @@ final class FileInformation implements \JsonSerializable
         return $self;
     }
 
+    /**
+     * @return array{
+     *     file: ?string,
+     *     usedClassNames: list<string>,
+     *     className: ?string,
+     *     classStartLine: non-negative-int,
+     *     extends: list<string>,
+     *     implements: list<string>,
+     *     attributes: list<string>
+     * }
+     */
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [
@@ -89,11 +106,11 @@ final class FileInformation implements \JsonSerializable
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getUsedClassNames(): array
     {
-        return array_unique($this->usedClassNames);
+        return array_values(array_unique($this->usedClassNames));
     }
 
     public function addUsedClassName(string $usedClassName): void
@@ -116,13 +133,16 @@ final class FileInformation implements \JsonSerializable
         return $this->classStartLine;
     }
 
+    /**
+     * @param non-negative-int $classStartLine
+     */
     public function setClassStartLine(int $classStartLine): void
     {
         $this->classStartLine = $classStartLine;
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getExtends(): array
     {
@@ -135,7 +155,7 @@ final class FileInformation implements \JsonSerializable
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getImplements(): array
     {
@@ -148,7 +168,7 @@ final class FileInformation implements \JsonSerializable
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getAttributes(): array
     {

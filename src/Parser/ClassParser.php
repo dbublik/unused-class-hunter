@@ -22,6 +22,10 @@ final readonly class ClassParser
     {
         $nodes = $this->parser->parse($code);
 
+        if (null === $nodes) {
+            throw new \RuntimeException(\sprintf('Parse error: %s', $code));
+        }
+
         return $this->traverser->traverse($nodes);
     }
 }

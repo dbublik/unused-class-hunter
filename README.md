@@ -64,13 +64,13 @@ $finder = Finder::create()
 
 return (new Config())
     ->setFinder($finder)
-    ->withIgnoredClasses([
+    ->withIgnoredClasses(
         \ExampleNamespace\FirstExampleClass::class,
         \ExampleNamespace\SecondExampleClass::class,
-    ])
-    ->withIgnoredAttributes([
+    )
+    ->withIgnoredAttributes(
         \ExampleNamespace\Attribute\ExampleAttribute::class,
-    ]);
+    );
 ```
 
 The third option is to create your own custom filter:
@@ -89,6 +89,7 @@ use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
 
 final readonly class ExampleFilter implements FilterInterface
 {
+    #[\Override]
     public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
     {
         return str_starts_with($class->getClassName(), 'BadName');
@@ -109,9 +110,9 @@ $finder = Finder::create()
 
 return (new Config())
     ->setFinder($finder)
-    ->withFilters([
+    ->withFilters(
         new \ExampleNamespace\Filter\ExampleFilter(),
-    ]);
+    );
 ```
 
 ### Custom cache directory:

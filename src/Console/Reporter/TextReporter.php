@@ -8,6 +8,7 @@ use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 
 final readonly class TextReporter implements ReporterInterface
 {
+    #[\Override]
     public function getFormat(): string
     {
         return 'txt';
@@ -16,9 +17,10 @@ final readonly class TextReporter implements ReporterInterface
     /**
      * @param list<FileInformation> $unusedClasses
      */
+    #[\Override]
     public function generate(array $unusedClasses): string
     {
-        if (empty($unusedClasses)) {
+        if ([] === $unusedClasses) {
             return '<info>Success! The hunt is over — no unused classes found.</info>' . PHP_EOL . PHP_EOL;
         }
 

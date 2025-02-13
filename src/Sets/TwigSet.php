@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Sets;
 
-final readonly class TwigSet extends AbstractSet
+use DBublik\UnusedClassHunter\Config;
+
+final readonly class TwigSet implements SetInterface
 {
-    /**
-     * @return iterable<class-string>
-     */
-    public function getIgnoredClasses(): iterable
+    #[\Override]
+    public function __invoke(Config $config): void
     {
-        return [
-            'Twig\Extension\ExtensionInterface',
-        ];
+        $config->withIgnoredClasses('Twig\Extension\ExtensionInterface');
     }
 }

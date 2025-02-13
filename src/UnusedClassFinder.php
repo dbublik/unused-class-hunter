@@ -21,7 +21,7 @@ final readonly class UnusedClassFinder
     }
 
     /**
-     * @return FileInformation[]
+     * @return list<FileInformation>
      */
     public function findClasses(SymfonyStyle $io): array
     {
@@ -40,7 +40,7 @@ final readonly class UnusedClassFinder
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     private function getFilePaths(): array
     {
@@ -53,6 +53,9 @@ final readonly class UnusedClassFinder
         return $filePaths;
     }
 
+    /**
+     * @param list<string> $filePaths
+     */
     private function readFiles(SymfonyStyle $io, array $filePaths): ParseInformation
     {
         $files = [];

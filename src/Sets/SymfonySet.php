@@ -4,41 +4,23 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Sets;
 
+use DBublik\UnusedClassHunter\Config;
 use DBublik\UnusedClassHunter\Filter\AutoconfigureTagAttributeFilter;
-use DBublik\UnusedClassHunter\Filter\FilterInterface;
 
-final readonly class SymfonySet extends AbstractSet
+final readonly class SymfonySet implements SetInterface
 {
-    /**
-     * @return iterable<class-string, FilterInterface>
-     */
-    public function getFilters(): iterable
+    #[\Override]
+    public function __invoke(Config $config): void
     {
-        return [
-            new AutoconfigureTagAttributeFilter(),
-        ];
-    }
-
-    /**
-     * @return iterable<class-string>
-     */
-    public function getIgnoredClasses(): iterable
-    {
-        return [
+        $config->withFilters(new AutoconfigureTagAttributeFilter());
+        $config->withIgnoredClasses(
             'Symfony\Component\EventDispatcher\EventSubscriberInterface',
             'Symfony\Component\Form\FormTypeExtensionInterface',
             'Symfony\Component\Validator\ConstraintValidatorInterface',
-        ];
-    }
-
-    /**
-     * @return iterable<class-string>
-     */
-    public function getIgnoredAttributes(): iterable
-    {
-        return [
+        );
+        $config->withIgnoredAttributes(
             'Symfony\Component\Console\Attribute\AsCommand',
             'Symfony\Component\Routing\Attribute\Route',
-        ];
+        );
     }
 }

@@ -27,12 +27,14 @@ final class CheckCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addOption('config', null, InputOption::VALUE_REQUIRED, 'The path to a config file.');
         $this->addOption('format', null, InputOption::VALUE_REQUIRED, 'To output results in other formats.', 'txt');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle(
@@ -40,10 +42,26 @@ final class CheckCommand extends Command
             $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output
         );
 
+        $configPath = $input->getOption('config');
+
+        if (null !== $configPath && !\is_string($configPath)) {
+            $io->error('Option "config" must be a string');
+
+            return Command::FAILURE;
+        }
+
+        $format = $input->getOption('format');
+
+        if (!\is_string($format)) {
+            $io->error('Option "format" must be a string');
+
+            return Command::FAILURE;
+        }
+
         $config = new Config();
 
-        if (null !== $configPath = $input->getOption('config')) {
-            if (!file_exists((string) $configPath)) {
+        if (null !== $configPath) {
+            if (!file_exists($configPath)) {
                 $io->error('The config file is not exists');
 
                 return Command::FAILURE;
@@ -62,7 +80,7 @@ final class CheckCommand extends Command
 
         $unusedClasses = (new UnusedClassFinder($config))->findClasses($io);
 
-        $reporter = $this->reportFactory->getReporter($input->getOption('format'));
+        $reporter = $this->reportFactory->getReporter($format);
         $report = $reporter->generate($unusedClasses);
 
         $output->isDecorated() ? $output->write($report) : $output->write($report, false, OutputInterface::OUTPUT_RAW);

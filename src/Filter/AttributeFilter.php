@@ -10,6 +10,7 @@ use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
 
 final readonly class AttributeFilter implements FilterInterface
 {
+    #[\Override]
     public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
     {
         foreach ($class->getAttributes() as $attribute) {

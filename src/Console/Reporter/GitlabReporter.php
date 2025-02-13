@@ -8,6 +8,7 @@ use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 
 final readonly class GitlabReporter implements ReporterInterface
 {
+    #[\Override]
     public function getFormat(): string
     {
         return 'gitlab';
@@ -16,6 +17,7 @@ final readonly class GitlabReporter implements ReporterInterface
     /**
      * @param list<FileInformation> $unusedClasses
      */
+    #[\Override]
     public function generate(array $unusedClasses): string
     {
         $report = [];

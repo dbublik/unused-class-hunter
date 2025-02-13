@@ -8,6 +8,9 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 
+[*.neon]
+indent_style = tab
+
 [*.php]
 ij_php_align_multiline_extends_list = true
 ij_php_align_multiline_parameters = false

@@ -27,7 +27,7 @@ final readonly class Cache
         }
 
         try {
-            $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+            $data = (array) json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
             return null;
         }

@@ -10,6 +10,7 @@ use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
 
 final readonly class CodeceptionTestFilter implements FilterInterface
 {
+    #[\Override]
     public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
     {
         if (!str_ends_with((string) $class->getClassName(), 'Cest')) {
@@ -17,9 +18,11 @@ final readonly class CodeceptionTestFilter implements FilterInterface
         }
 
         $extends = $class->getExtends();
-        $count = \count($extends);
 
-        return (0 === $count)
-            || (1 === $count && str_ends_with($extends[0], 'Cest'));
+        if (0 === $count = \count($extends)) {
+            return true;
+        }
+
+        return 1 === $count && str_ends_with($extends[0], 'Cest');
     }
 }

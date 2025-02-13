@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Sets;
 
-final readonly class DoctrineSet extends AbstractSet
+use DBublik\UnusedClassHunter\Config;
+
+final readonly class DoctrineSet implements SetInterface
 {
-    /**
-     * @return iterable<class-string>
-     */
-    public function getIgnoredAttributes(): iterable
+    #[\Override]
+    public function __invoke(Config $config): void
     {
-        return [
-            'Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener',
-        ];
+        $config->withIgnoredAttributes('Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener');
     }
 }

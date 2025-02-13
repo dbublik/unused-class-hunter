@@ -7,10 +7,10 @@ namespace DBublik\UnusedClassHunter;
 use DBublik\UnusedClassHunter\Filter\AttributeFilter;
 use DBublik\UnusedClassHunter\Filter\ClassFilter;
 use DBublik\UnusedClassHunter\Filter\FilterInterface;
-use DBublik\UnusedClassHunter\Sets\AbstractSet;
 use DBublik\UnusedClassHunter\Sets\CodeceptionSet;
 use DBublik\UnusedClassHunter\Sets\DoctrineSet;
 use DBublik\UnusedClassHunter\Sets\PhpunitSet;
+use DBublik\UnusedClassHunter\Sets\SetInterface;
 use DBublik\UnusedClassHunter\Sets\SymfonySet;
 use DBublik\UnusedClassHunter\Sets\TwigSet;
 use Symfony\Component\Finder\Finder;
@@ -21,27 +21,25 @@ final class Config
     private string $cacheDir;
 
     /**
-     * @var iterable<class-string, FilterInterface>
+     * @var array<class-string<FilterInterface>, FilterInterface>
      */
-    private iterable $filters = [];
+    private array $filters = [];
 
     /**
-     * @var iterable<class-string>
+     * @var array<class-string, class-string>
      */
-    private iterable $ignoredClasses = [];
+    private array $ignoredClasses = [];
 
     /**
-     * @var iterable<class-string>
+     * @var array<class-string, class-string>
      */
-    private iterable $ignoredAttributes = [];
+    private array $ignoredAttributes = [];
 
     public function __construct()
     {
-        $this->finder = Finder::create()->in(getcwd());
+        $this->finder = Finder::create()->in((string) getcwd());
         $this->cacheDir = sys_get_temp_dir();
-
-        $this->addFilter(new ClassFilter());
-        $this->addFilter(new AttributeFilter());
+        $this->withFilters(new ClassFilter(), new AttributeFilter());
     }
 
     public function getFinder(): Finder
@@ -72,63 +70,58 @@ final class Config
     }
 
     /**
-     * @return iterable<class-string, FilterInterface>
+     * @return list<FilterInterface>
      */
-    public function getFilters(): iterable
+    public function getFilters(): array
     {
-        return $this->filters;
+        return array_values($this->filters);
     }
 
-    /**
-     * @param iterable<FilterInterface> $filters
-     */
-    public function withFilters(iterable $filters): self
+    public function withFilters(FilterInterface ...$filters): self
     {
         foreach ($filters as $filter) {
-            if (!$filter instanceof FilterInterface) {
-                throw new \InvalidArgumentException(
-                    \sprintf('Filter %s must implement %s', $filter::class, FilterInterface::class),
-                );
-            }
-
-            $this->addFilter($filter);
+            $this->filters[$filter::class] = $filter;
         }
 
         return $this;
     }
 
     /**
-     * @return iterable<class-string>
+     * @return list<class-string>
      */
-    public function getIgnoredClasses(): iterable
+    public function getIgnoredClasses(): array
     {
-        return array_unique($this->ignoredClasses);
+        return array_values($this->ignoredClasses);
     }
 
     /**
-     * @param iterable<class-string> $classes
+     * @param class-string ...$classes
      */
-    public function withIgnoredClasses(iterable $classes): self
+    public function withIgnoredClasses(string ...$classes): self
     {
-        $this->ignoredClasses = array_merge($this->ignoredClasses, iterator_to_array($classes));
+        foreach ($classes as $class) {
+            $this->ignoredClasses[$class] = $class;
+        }
 
         return $this;
     }
 
     /**
-     * @return iterable<class-string>
+     * @return list<class-string>
      */
-    public function getIgnoredAttributes(): iterable
+    public function getIgnoredAttributes(): array
     {
-        return array_unique($this->ignoredAttributes);
+        return array_values($this->ignoredAttributes);
     }
 
     /**
-     * @param iterable<class-string> $attributes
+     * @param class-string ...$attributes
      */
-    public function withIgnoredAttributes(iterable $attributes): self
+    public function withIgnoredAttributes(string ...$attributes): self
     {
-        $this->ignoredAttributes = array_merge($this->ignoredAttributes, iterator_to_array($attributes));
+        foreach ($attributes as $attribute) {
+            $this->ignoredAttributes[$attribute] = $attribute;
+        }
 
         return $this;
     }
@@ -149,7 +142,7 @@ final class Config
         ];
 
         foreach (\func_get_args() as $key => $isEnabled) {
-            if ($isEnabled) {
+            if (\array_key_exists($key, $sets) && \is_bool($isEnabled) && $isEnabled) {
                 $this->withSet($sets[$key]);
             }
         }
@@ -157,15 +150,8 @@ final class Config
         return $this;
     }
 
-    public function withSet(AbstractSet $set): void
+    public function withSet(SetInterface $set): void
     {
-        $this->withFilters($set->getFilters());
-        $this->withIgnoredClasses($set->getIgnoredClasses());
-        $this->withIgnoredAttributes($set->getIgnoredAttributes());
-    }
-
-    private function addFilter(FilterInterface $filter): void
-    {
-        $this->filters[$filter::class] = $filter;
+        $set($this);
     }
 }

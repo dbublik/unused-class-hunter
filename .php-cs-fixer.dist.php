@@ -12,6 +12,7 @@ return (new Config())
     ->setFinder(
         Finder::create()
             ->in(__DIR__)
+            ->exclude(['var'])
             ->ignoreDotFiles(false)
     )
     ->setRiskyAllowed(true)

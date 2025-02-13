@@ -10,10 +10,15 @@ use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
 
 final class ClassFilter implements FilterInterface
 {
+    #[\Override]
     public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
     {
         foreach ($config->getIgnoredClasses() as $ignoredClass) {
-            if ($ignoredClass === $class->getClassName() || is_a($class->getClassName(), $ignoredClass, true)) {
+            if ($ignoredClass === $class->getClassName()) {
+                return true;
+            }
+
+            if (is_a($class->getClassName() ?? '', $ignoredClass, true)) {
                 return true;
             }
         }

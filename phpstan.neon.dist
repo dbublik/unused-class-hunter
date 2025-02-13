@@ -1,0 +1,28 @@
+includes:
+	- phar://phpstan.phar/conf/bleedingEdge.neon
+
+parameters:
+	level: 9
+	tmpDir: var/cache/phpstan
+	paths:
+		- bin
+		- src
+		- tests
+
+	checkTooWideReturnTypesInProtectedAndPublicMethods: true
+	checkUninitializedProperties: true
+	rememberPossiblyImpureFunctionValues: false
+	checkBenevolentUnionTypes: true
+	reportPossiblyNonexistentGeneralArrayOffset: true
+	reportPossiblyNonexistentConstantArrayOffset: true
+	reportAlwaysTrueInLastCondition: true
+	reportAnyTypeWideningInVarTag: true
+	checkMissingOverrideMethodAttribute: true
+	checkMissingCallableSignature: true
+	treatPhpDocTypesAsCertain: false
+
+	ignoreErrors:
+	    -
+	        identifier: argument.type
+	        message: '#^Parameter \#\d+ ...\$(classes|attributes) of method DBublik\\UnusedClassHunter\\Config::withIgnored(Classes|Attributes)\(\) expects class-string, string given\.$#'
+	        path: src/Sets/*
