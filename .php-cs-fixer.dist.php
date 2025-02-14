@@ -22,9 +22,6 @@ return (new Config())
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => true,
         '@PHPUnit100Migration:risky' => true,
-        // there is a bug in phpstorm https://youtrack.jetbrains.com/issue/WI-38385
-        // https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000013544-PHP-array-declaration-indentation
-        'array_indentation' => false,
         'attribute_empty_parentheses' => true,
         'concat_space' => ['spacing' => 'one'],
         'get_class_to_class_keyword' => true,

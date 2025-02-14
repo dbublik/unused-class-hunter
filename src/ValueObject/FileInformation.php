@@ -25,6 +25,8 @@ final class FileInformation implements \JsonSerializable
     private array $attributes = [];
 
     /**
+     * @todo check all types and subtypes of the array.
+     *
      * @phpstan-ignore missingType.iterableValue
      */
     public static function fromData(array $data): ?self
@@ -46,12 +48,19 @@ final class FileInformation implements \JsonSerializable
         $self = new self();
 
         try {
+            // @phpstan-ignore assign.propertyType
             $self->file = $data['file'];
+            // @phpstan-ignore assign.propertyType
             $self->usedClassNames = $data['usedClassNames'];
+            // @phpstan-ignore assign.propertyType
             $self->className = $data['className'];
+            // @phpstan-ignore assign.propertyType
             $self->classStartLine = $data['classStartLine'];
+            // @phpstan-ignore assign.propertyType
             $self->extends = $data['extends'];
+            // @phpstan-ignore assign.propertyType
             $self->implements = $data['implements'];
+            // @phpstan-ignore assign.propertyType
             $self->attributes = $data['attributes'];
             // @phpstan-ignore catch.neverThrown
         } catch (\Throwable) {
