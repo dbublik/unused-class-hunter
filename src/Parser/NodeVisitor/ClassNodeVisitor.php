@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClassHunter\Parser;
+namespace DBublik\UnusedClassHunter\Parser\NodeVisitor;
 
 use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 use PhpParser\Node;
@@ -20,12 +20,9 @@ use PhpParser\NodeVisitorAbstract;
 
 final class ClassNodeVisitor extends NodeVisitorAbstract
 {
-    private FileInformation $information;
-
-    public function __construct()
-    {
-        $this->information = new FileInformation();
-    }
+    public function __construct(
+        private FileInformation $information = new FileInformation(),
+    ) {}
 
     /**
      * @param Node[] $nodes

@@ -11,7 +11,7 @@ final readonly class FileParser
 {
     public function __construct(
         private Cache $cache,
-        private ClassParser $parser = new ClassParser(),
+        private ClassParser $parser,
     ) {}
 
     public function parse(string $filePath): FileInformation
@@ -29,9 +29,7 @@ final readonly class FileParser
 
     private function parseFile(string $filePath): FileInformation
     {
-        $code = file_get_contents($filePath);
-
-        if (false === $code) {
+        if (false === $code = file_get_contents($filePath)) {
             throw new \RuntimeException(\sprintf('Unable to read file %s', $filePath));
         }
 

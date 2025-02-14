@@ -13,7 +13,11 @@ return (new Config())
         Finder::create()
             ->in(__DIR__)
             ->exclude(['var'])
-            ->ignoreDotFiles(false)
+            ->append([
+                __DIR__ . '/bin/unused-class-hunter',
+                __DIR__ . '/.php-cs-fixer.dist.php',
+                __DIR__ . '/.unused-class-hunter.dist.php',
+            ])
     )
     ->setRiskyAllowed(true)
     ->setRules([
@@ -24,6 +28,9 @@ return (new Config())
         '@PHPUnit100Migration:risky' => true,
         'attribute_empty_parentheses' => true,
         'concat_space' => ['spacing' => 'one'],
+        'date_time_immutable' => true,
+        'final_class' => true,
+        'final_public_method_for_abstract_class' => true,
         'get_class_to_class_keyword' => true,
         'modernize_strpos' => true,
         'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],

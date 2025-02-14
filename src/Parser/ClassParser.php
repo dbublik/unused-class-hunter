@@ -10,22 +10,27 @@ use PhpParser\ParserFactory;
 
 final readonly class ClassParser
 {
-    private Parser $parser;
+    private function __construct(
+        private Parser $parser,
+        private ClassNodeTraverser $traverser,
+    ) {}
 
-    public function __construct(
-        private ClassNodeTraverser $traverser = new ClassNodeTraverser(),
-    ) {
-        $this->parser = (new ParserFactory())->createForHostVersion();
+    public static function create(): self
+    {
+        return new self(
+            (new ParserFactory())->createForHostVersion(),
+            new ClassNodeTraverser(),
+        );
     }
 
     public function parse(string $code): FileInformation
     {
-        $nodes = $this->parser->parse($code);
-
-        if (null === $nodes) {
+        if (null === $nodes = $this->parser->parse($code)) {
             throw new \RuntimeException(\sprintf('Parse error: %s', $code));
         }
 
-        return $this->traverser->traverse($nodes);
+        $this->traverser->traverse($nodes);
+
+        return $this->traverser->visitor->getInformation();
     }
 }
