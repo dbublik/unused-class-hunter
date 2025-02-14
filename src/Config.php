@@ -47,6 +47,7 @@ final class Config
         return $this->finder
             ->exclude(['var', 'vendor'])
             ->sortByName()
+            ->name('*.php')
             ->files();
     }
 
@@ -150,8 +151,10 @@ final class Config
         return $this;
     }
 
-    public function withSet(SetInterface $set): void
+    public function withSet(SetInterface $set): self
     {
         $set($this);
+
+        return $this;
     }
 }

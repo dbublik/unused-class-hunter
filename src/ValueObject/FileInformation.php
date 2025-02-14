@@ -14,6 +14,7 @@ final class FileInformation implements \JsonSerializable
 
     /** @var non-negative-int */
     private int $classStartLine = 0;
+    private bool $hasClassApiTag = false;
 
     /** @var list<string> */
     private array $extends = [];
@@ -37,6 +38,7 @@ final class FileInformation implements \JsonSerializable
                 $data['file'],
                 $data['usedClassNames'],
                 $data['classStartLine'],
+                $data['hasClassApiTag'],
                 $data['extends'],
                 $data['implements'],
                 $data['attributes']
@@ -56,6 +58,8 @@ final class FileInformation implements \JsonSerializable
             $self->className = $data['className'];
             // @phpstan-ignore assign.propertyType
             $self->classStartLine = $data['classStartLine'];
+            // @phpstan-ignore assign.propertyType
+            $self->hasClassApiTag = $data['hasClassApiTag'];
             // @phpstan-ignore assign.propertyType
             $self->extends = $data['extends'];
             // @phpstan-ignore assign.propertyType
@@ -148,6 +152,16 @@ final class FileInformation implements \JsonSerializable
     public function setClassStartLine(int $classStartLine): void
     {
         $this->classStartLine = $classStartLine;
+    }
+
+    public function hasClassApiTag(): bool
+    {
+        return $this->hasClassApiTag;
+    }
+
+    public function setHasClassApiTag(bool $hasClassApiTag): void
+    {
+        $this->hasClassApiTag = $hasClassApiTag;
     }
 
     /**

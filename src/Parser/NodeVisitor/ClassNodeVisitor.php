@@ -83,6 +83,13 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
             $this->information->setClassStartLine((int) $startLine);
         }
 
+        if (
+            (null !== $doc = $node->getDocComment())
+            && 1 === preg_match('/@api\b/', $doc->getText())
+        ) {
+            $this->information->setHasClassApiTag(true);
+        }
+
         if ($node instanceof Class_) {
             if ($node->extends instanceof Name) {
                 $this->information->addExtends($node->extends->toString());

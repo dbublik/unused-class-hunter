@@ -73,7 +73,13 @@ return (new Config())
     );
 ```
 
-The third option is to create your own custom filter:
+The third option is to use one of our "filter".
+In the engine of this project we use two filters - `ClassFilter` and `AttributeFilter`.
+
+But there are other filters - for example `ApiTagFilter` (which filters classes with the tag `@api`).
+See all filters in directory `DBublik\UnusedClassHunter\Filter`.
+
+Or you can create your own custom filter:
 
 ```php
 <?php
