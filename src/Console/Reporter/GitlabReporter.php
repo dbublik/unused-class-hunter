@@ -30,7 +30,7 @@ final readonly class GitlabReporter implements ReporterInterface
                 'location' => [
                     'path' => $unusedClass->getFile(),
                     'lines' => [
-                        'begin' => 0,
+                        'begin' => $unusedClass->getClassStartLine(),
                     ],
                 ],
             ];
