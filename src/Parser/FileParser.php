@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter\Parser;
 
 use DBublik\UnusedClassHunter\Cache\Cache;
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\FileNode;
 
 final readonly class FileParser
 {
@@ -14,28 +16,49 @@ final readonly class FileParser
         private ClassParser $parser,
     ) {}
 
-    public function parse(string $filePath): FileInformation
+    /**
+     * @param non-empty-string $file
+     */
+    public function parse(string $file): AbstractFileNode
     {
-        if (null !== $information = $this->cache->get($filePath)) {
-            return $information;
+        if (null !== $fileNode = $this->cache->get($file)) {
+            return $fileNode;
         }
 
-        $information = $this->parseFile($filePath);
+        $fileNode = $this->parseFile($file);
 
-        $this->cache->set($filePath, $information);
+        $this->cache->set($file, $fileNode);
 
-        return $information;
+        return $fileNode;
     }
 
-    private function parseFile(string $filePath): FileInformation
+    /**
+     * @param non-empty-string $file
+     */
+    private function parseFile(string $file): AbstractFileNode
     {
-        if (false === $code = file_get_contents($filePath)) {
-            throw new \RuntimeException(\sprintf('Unable to read file %s', $filePath));
+        if (false === $code = file_get_contents($file)) {
+            throw new \RuntimeException(\sprintf('Unable to read file %s', $file));
         }
 
-        $file = $this->parser->parse($code);
-        $file->setFile($filePath);
+        $parsedFile = $this->parser->parse($code);
 
-        return $file;
+        if (null === $name = $parsedFile->getClassName()) {
+            return new FileNode(
+                file: $file,
+                usedClasses: $parsedFile->getUsedClasses(),
+            );
+        }
+
+        return new ClassNode(
+            file: $file,
+            usedClasses: $parsedFile->getUsedClasses(),
+            name: $name,
+            startLine: $parsedFile->getClassStartLine(),
+            hasApiTag: $parsedFile->hasClassApiTag(),
+            extends: $parsedFile->getExtends(),
+            implements: $parsedFile->getImplements(),
+            attributes: $parsedFile->getAttributes(),
+        );
     }
 }

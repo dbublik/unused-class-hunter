@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Filter;
 
-use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
-use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 
 final class ClassFilter implements FilterInterface
 {
     #[\Override]
-    public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
+    public function isIgnored(ClassNode $class, ReaderResult $reader): bool
     {
-        foreach ($config->getIgnoredClasses() as $ignoredClass) {
-            if ($ignoredClass === $class->getClassName()) {
-                return true;
-            }
-
-            if (is_a($class->getClassName() ?? '', $ignoredClass, true)) {
+        foreach ($reader->getConfig()->getIgnoredClasses() as $ignoredClass) {
+            if (
+                $ignoredClass === $class->getName()
+                || is_a($class->getName(), $ignoredClass, true)
+            ) {
                 return true;
             }
         }

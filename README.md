@@ -88,17 +88,16 @@ declare(strict_types=1);
 
 namespace ExampleNamespace\Filter;
 
-use DBublik\UnusedClassHunter\Config;
 use DBublik\UnusedClassHunter\Filter\FilterInterface;
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
-use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 
 final readonly class ExampleFilter implements FilterInterface
 {
     #[\Override]
-    public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
+    public function isIgnored(ClassNode $class, ReaderResult $reader): bool
     {
-        return str_starts_with($class->getClassName(), 'BadName');
+        return str_starts_with($class->getName(), 'BadName');
     }
 }
 ```

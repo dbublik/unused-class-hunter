@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Parser\NodeVisitor;
 
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\Parser\ParsedFile;
 use PhpParser\Node;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\FuncCall;
@@ -21,7 +21,7 @@ use PhpParser\NodeVisitorAbstract;
 final class ClassNodeVisitor extends NodeVisitorAbstract
 {
     public function __construct(
-        private FileInformation $information = new FileInformation(),
+        private ParsedFile $parsedFile = new ParsedFile(),
     ) {}
 
     /**
@@ -32,7 +32,7 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
     #[\Override]
     public function beforeTraverse(array $nodes): array
     {
-        $this->information = new FileInformation();
+        $this->parsedFile = new ParsedFile();
 
         return $nodes;
     }
@@ -55,9 +55,9 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
         return null;
     }
 
-    public function getInformation(): FileInformation
+    public function getParsedFile(): ParsedFile
     {
-        return $this->information;
+        return $this->parsedFile;
     }
 
     private function readClass(ClassLike $node): void
@@ -71,39 +71,44 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
             return;
         }
 
-        $this->information->setClassName($namespace->toString());
+        // @phpstan-ignore argument.type
+        $this->parsedFile->setClassName($namespace->toString());
 
         if (
             is_numeric($startLine = $node->getAttribute('startLine'))
             && (int) $startLine > 0
         ) {
-            $this->information->setClassStartLine((int) $startLine);
+            $this->parsedFile->setClassStartLine((int) $startLine);
         }
 
         if (
             (null !== $doc = $node->getDocComment())
             && 1 === preg_match('/@api\b/', $doc->getText())
         ) {
-            $this->information->setHasClassApiTag(true);
+            $this->parsedFile->setHasClassApiTag(true);
         }
 
         if ($node instanceof Class_) {
             if ($node->extends instanceof Name) {
-                $this->information->addExtends($node->extends->toString());
+                // @phpstan-ignore argument.type
+                $this->parsedFile->addExtends($node->extends->toString());
             }
 
             foreach ($node->implements as $implement) {
-                $this->information->addImplement($implement->toString());
+                // @phpstan-ignore argument.type
+                $this->parsedFile->addImplement($implement->toString());
             }
         } elseif ($node instanceof Interface_) {
             foreach ($node->extends as $extend) {
-                $this->information->addExtends($extend->toString());
+                // @phpstan-ignore argument.type
+                $this->parsedFile->addExtends($extend->toString());
             }
         }
 
         foreach ($node->attrGroups as $attrGroup) {
             foreach ($attrGroup->attrs as $attr) {
-                $this->information->addAttribute($attr->name->toString());
+                // @phpstan-ignore argument.type
+                $this->parsedFile->addAttribute($attr->name->toString());
             }
         }
     }
@@ -112,7 +117,8 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
     {
         foreach ($node->attrGroups as $attrGroup) {
             foreach ($attrGroup->attrs as $attr) {
-                $this->information->addAttribute($attr->name->toString());
+                // @phpstan-ignore argument.type
+                $this->parsedFile->addAttribute($attr->name->toString());
             }
         }
     }
@@ -133,6 +139,7 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
             return;
         }
 
-        $this->information->addUsedClassName($node->toString());
+        // @phpstan-ignore argument.type
+        $this->parsedFile->addUsedClass($node->toString());
     }
 }

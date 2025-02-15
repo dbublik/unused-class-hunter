@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Filter;
 
-use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
-use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 
 final readonly class AttributeFilter implements FilterInterface
 {
     #[\Override]
-    public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
+    public function isIgnored(ClassNode $class, ReaderResult $reader): bool
     {
-        foreach ($class->getAttributes() as $attribute) {
-            foreach ($config->getIgnoredAttributes() as $ignoredAttribute) {
+        if (
+            ([] === $attributes = $class->getAttributes())
+            || ([] === $ignoredAttributes = $reader->getConfig()->getIgnoredAttributes())
+        ) {
+            return false;
+        }
+
+        foreach ($ignoredAttributes as $ignoredAttribute) {
+            foreach ($attributes as $attribute) {
                 if (is_a($attribute, $ignoredAttribute, true)) {
                     return true;
                 }

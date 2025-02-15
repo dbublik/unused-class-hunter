@@ -9,8 +9,8 @@ use DBublik\UnusedClassHunter\Filter\AttributeFilter;
 use DBublik\UnusedClassHunter\Filter\ClassFilter;
 use DBublik\UnusedClassHunter\Filter\FilterInterface;
 use DBublik\UnusedClassHunter\Sets\SetInterface;
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
-use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
@@ -73,7 +73,7 @@ final class ConfigTest extends TestCase
         $config = new Config();
         $customFilter = new class implements FilterInterface {
             #[\Override]
-            public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
+            public function isIgnored(ClassNode $class, ReaderResult $reader): bool
             {
                 return false;
             }

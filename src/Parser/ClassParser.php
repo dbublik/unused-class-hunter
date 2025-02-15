@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Parser;
 
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
@@ -23,7 +22,7 @@ final readonly class ClassParser
         );
     }
 
-    public function parse(string $code): FileInformation
+    public function parse(string $code): ParsedFile
     {
         if (null === $nodes = $this->parser->parse($code)) {
             throw new \RuntimeException(\sprintf('Parse error: %s', $code));
@@ -31,6 +30,6 @@ final readonly class ClassParser
 
         $this->traverser->traverse($nodes);
 
-        return $this->traverser->visitor->getInformation();
+        return $this->traverser->visitor->getParsedFile();
     }
 }

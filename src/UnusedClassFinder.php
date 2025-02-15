@@ -7,8 +7,8 @@ namespace DBublik\UnusedClassHunter;
 use DBublik\UnusedClassHunter\Cache\Cache;
 use DBublik\UnusedClassHunter\Parser\ClassParser;
 use DBublik\UnusedClassHunter\Parser\FileParser;
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
-use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 final readonly class UnusedClassFinder
@@ -25,60 +25,64 @@ final readonly class UnusedClassFinder
     }
 
     /**
-     * @return list<FileInformation>
+     * @return list<ClassNode>
      */
     public function findClasses(SymfonyStyle $io): array
     {
-        $filePaths = $this->getFilePaths();
+        $files = $this->getFiles();
 
-        $information = $this->readFiles($io, $filePaths);
+        $readerResult = $this->readFiles($io, $files);
+        $unusedClasses = $readerResult->getUnusedClasses();
 
-        $result = [];
-        foreach ($information->getUnusedClasses() as $unusedClass) {
-            if (!$this->isSkipped($unusedClass, $information)) {
-                $result[] = $unusedClass;
+        $classes = [];
+        foreach ($unusedClasses as $class) {
+            if (!$this->isSkipped($class, $readerResult)) {
+                $classes[] = $class;
             }
         }
 
-        return $result;
+        return $classes;
     }
 
     /**
-     * @return list<string>
+     * @return list<non-empty-string>
      */
-    private function getFilePaths(): array
-    {
-        $filePaths = [];
-
-        foreach ($this->config->getFinder() as $fileInfo) {
-            $filePaths[] = (string) $fileInfo->getRealPath();
-        }
-
-        return $filePaths;
-    }
-
-    /**
-     * @param list<string> $filePaths
-     */
-    private function readFiles(SymfonyStyle $io, array $filePaths): ParseInformation
+    private function getFiles(): array
     {
         $files = [];
-        $progressBar = $io->createProgressBar(\count($filePaths));
 
-        foreach ($filePaths as $filePath) {
-            $files[] = $this->fileParser->parse($filePath);
+        foreach ($this->config->getFinder() as $fileInfo) {
+            /** @var false|non-empty-string $file */
+            if (false !== $file = $fileInfo->getRealPath()) {
+                $files[] = $file;
+            }
+        }
+
+        return $files;
+    }
+
+    /**
+     * @param list<non-empty-string> $files
+     */
+    private function readFiles(SymfonyStyle $io, array $files): ReaderResult
+    {
+        $fileNodes = [];
+        $progressBar = $io->createProgressBar(\count($files));
+
+        foreach ($files as $filePath) {
+            $fileNodes[] = $this->fileParser->parse($filePath);
             $progressBar->advance();
         }
 
         $io->newLine(2);
 
-        return new ParseInformation($files);
+        return new ReaderResult($this->config, $fileNodes);
     }
 
-    private function isSkipped(FileInformation $class, ParseInformation $information): bool
+    private function isSkipped(ClassNode $class, ReaderResult $reader): bool
     {
         foreach ($this->config->getFilters() as $filter) {
-            if ($filter->isIgnored($class, $information, $this->config)) {
+            if ($filter->isIgnored($class, $reader)) {
                 return true;
             }
         }

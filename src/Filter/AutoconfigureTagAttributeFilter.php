@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Filter;
 
-use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
-use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 
 final readonly class AutoconfigureTagAttributeFilter implements FilterInterface
 {
@@ -17,16 +16,16 @@ final readonly class AutoconfigureTagAttributeFilter implements FilterInterface
     ) {}
 
     #[\Override]
-    public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
+    public function isIgnored(ClassNode $class, ReaderResult $reader): bool
     {
         if ($this->hasAttribute($class)) {
             return true;
         }
 
-        return $this->hasParentAttribute($class, $information);
+        return $this->hasParentAttribute($class, $reader);
     }
 
-    private function hasAttribute(FileInformation $class): bool
+    private function hasAttribute(ClassNode $class): bool
     {
         foreach ($class->getAttributes() as $attribute) {
             if (is_a($attribute, self::AUTOCONFIGURE_TAG_CLASS, true)) {
@@ -37,12 +36,12 @@ final readonly class AutoconfigureTagAttributeFilter implements FilterInterface
         return false;
     }
 
-    private function hasParentAttribute(FileInformation $class, ParseInformation $information, int $deep = 0): bool
+    private function hasParentAttribute(ClassNode $class, ReaderResult $reader, int $deep = 0): bool
     {
         ++$deep;
 
-        foreach (array_merge($class->getExtends(), $class->getImplements()) as $className) {
-            if (null === $parent = $information->getClassByClassName($className)) {
+        foreach (array_merge($class->getExtends(), $class->getImplements()) as $name) {
+            if (null === $parent = $reader->getClassByName($name)) {
                 continue;
             }
 
@@ -52,7 +51,7 @@ final readonly class AutoconfigureTagAttributeFilter implements FilterInterface
 
             if (
                 ($this->maxDeep > $deep)
-                && $this->hasParentAttribute($parent, $information, $deep)
+                && $this->hasParentAttribute($parent, $reader, $deep)
             ) {
                 return true;
             }

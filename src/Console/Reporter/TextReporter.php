@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Console\Reporter;
 
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 
 final readonly class TextReporter implements ReporterInterface
 {
@@ -15,7 +15,9 @@ final readonly class TextReporter implements ReporterInterface
     }
 
     /**
-     * @param list<FileInformation> $unusedClasses
+     * @param list<ClassNode> $unusedClasses
+     *
+     * @return non-empty-string
      */
     #[\Override]
     public function generate(array $unusedClasses): string
@@ -26,12 +28,17 @@ final readonly class TextReporter implements ReporterInterface
 
         $output = '';
         foreach ($unusedClasses as $unusedClass) {
-            $output .= $unusedClass->getRelativeFile() . PHP_EOL;
+            $output .= $this->getRelativeFile($unusedClass) . PHP_EOL;
         }
 
         $output .= PHP_EOL;
         $output .= \sprintf('<error>The hunt is over! %s unused classes detected.</error>', \count($unusedClasses));
 
         return $output . PHP_EOL . PHP_EOL;
+    }
+
+    private function getRelativeFile(ClassNode $unusedClass): string
+    {
+        return str_replace(getcwd() . \DIRECTORY_SEPARATOR, '', $unusedClass->getFile());
     }
 }

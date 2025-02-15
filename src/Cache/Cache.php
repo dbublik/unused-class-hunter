@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Cache;
 
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
-use Symfony\Component\Filesystem\Filesystem;
+use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\FileNode;
 
 final readonly class Cache
 {
     public function __construct(
         private string $cacheDir,
-        private Filesystem $filesystem = new Filesystem(),
     ) {}
 
-    public function get(string $file): ?FileInformation
+    /**
+     * @param non-empty-string $file
+     */
+    public function get(string $file): ?AbstractFileNode
     {
         $cacheFile = $this->getFileName($file);
 
@@ -32,21 +35,35 @@ final readonly class Cache
             return null;
         }
 
-        return FileInformation::fromData($data);
-    }
-
-    public function set(string $file, FileInformation $information): void
-    {
-        $filePath = $this->getFileName($file);
-        $dir = \dirname($filePath);
-
-        if (!file_exists($dir)) {
-            $this->filesystem->mkdir($dir);
+        if (\array_key_exists('class', $data)) {
+            return ClassNode::fromData($data);
         }
 
-        $this->filesystem->touch($filePath);
+        return FileNode::fromData($data);
+    }
 
-        file_put_contents($filePath, json_encode($information, JSON_THROW_ON_ERROR));
+    /**
+     * @param non-empty-string $file
+     */
+    public function set(string $file, AbstractFileNode $fileNode): void
+    {
+        $cacheFile = $this->getFileName($file);
+        $directory = \dirname($cacheFile);
+
+        if (
+            !file_exists($directory)
+            && !is_dir($directory) && !@mkdir($directory, 0o777, true) && !is_dir($directory)
+        ) {
+            throw new \RuntimeException(\sprintf('Failed to create "%s".', $directory));
+        }
+
+        if (!touch($cacheFile)) {
+            throw new \RuntimeException(\sprintf('Failed to touch "%s".', $cacheFile));
+        }
+
+        if (false === file_put_contents($cacheFile, json_encode($fileNode, JSON_THROW_ON_ERROR))) {
+            throw new \RuntimeException(\sprintf('Failed to write to "%s".', $cacheFile));
+        }
     }
 
     private function getFileName(string $file): string

@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Filter;
 
-use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\ValueObject\FileInformation;
-use DBublik\UnusedClassHunter\ValueObject\ParseInformation;
+use DBublik\UnusedClassHunter\ValueObject\ClassNode;
+use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 
 final readonly class CodeceptionTestFilter implements FilterInterface
 {
     #[\Override]
-    public function isIgnored(FileInformation $class, ParseInformation $information, Config $config): bool
+    public function isIgnored(ClassNode $class, ReaderResult $reader): bool
     {
-        if (!str_ends_with((string) $class->getClassName(), 'Cest')) {
+        if (!str_ends_with((string) $class->getName(), 'Cest')) {
             return false;
         }
 
