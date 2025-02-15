@@ -7,31 +7,48 @@ namespace DBublik\UnusedClassHunter\Cache;
 use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\FileNode;
+use Symfony\Component\Finder\Finder;
 
-final readonly class Cache
+final class Cache
 {
+    private readonly FileHandler $rootCacheFile;
+    private bool $signatureWasUpdated = true;
+
+    /** @var list<string> */
+    private readonly array $oldFiles;
+
+    /** @var list<string> */
+    private array $newFiles = [];
+
     public function __construct(
-        private string $cacheDir,
-    ) {}
+        private readonly string $cacheDir,
+        private readonly Signature $signature,
+    ) {
+        $this->rootCacheFile = new FileHandler($this->cacheDir . '/.hunter.cache');
+        $this->getRootCache();
+        $this->oldFiles = $this->getOldFiles();
+    }
+
+    public function __destruct()
+    {
+        foreach (array_diff($this->oldFiles, $this->newFiles) as $oldFile) {
+            unlink($oldFile);
+        }
+    }
 
     /**
      * @param non-empty-string $file
      */
     public function get(string $file): ?AbstractFileNode
     {
-        $cacheFile = $this->getFileName($file);
+        $cacheFile = $this->getFile($file);
+        $this->newFiles[] = $cacheFile->getName();
 
-        if (!file_exists($cacheFile)) {
+        if (true === $this->signatureWasUpdated) {
             return null;
         }
 
-        if (false === $json = file_get_contents($cacheFile)) {
-            return null;
-        }
-
-        try {
-            $data = (array) json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
+        if (null === $data = $cacheFile->read()) {
             return null;
         }
 
@@ -47,27 +64,48 @@ final readonly class Cache
      */
     public function set(string $file, AbstractFileNode $fileNode): void
     {
-        $cacheFile = $this->getFileName($file);
-        $directory = \dirname($cacheFile);
-
-        if (
-            !file_exists($directory)
-            && !is_dir($directory) && !@mkdir($directory, 0o777, true) && !is_dir($directory)
-        ) {
-            throw new \RuntimeException(\sprintf('Failed to create "%s".', $directory));
-        }
-
-        if (!touch($cacheFile)) {
-            throw new \RuntimeException(\sprintf('Failed to touch "%s".', $cacheFile));
-        }
-
-        if (false === file_put_contents($cacheFile, json_encode($fileNode, JSON_THROW_ON_ERROR))) {
-            throw new \RuntimeException(\sprintf('Failed to write to "%s".', $cacheFile));
-        }
+        $this->getFile($file)->write($fileNode);
     }
 
-    private function getFileName(string $file): string
+    /**
+     * @param non-empty-string $file
+     */
+    private function getFile(string $file): FileHandler
     {
-        return $this->cacheDir . '/classes/' . hash_file('sha256', $file);
+        return new FileHandler($this->cacheDir . '/classes/' . hash_file('sha256', $file));
+    }
+
+    private function getRootCache(): void
+    {
+        if (null !== $data = $this->rootCacheFile->read()) {
+            $oldSignature = Signature::fromData($data);
+
+            if (null !== $oldSignature && $this->signature->equals($oldSignature)) {
+                $this->signatureWasUpdated = false;
+
+                return;
+            }
+        }
+
+        $this->rootCacheFile->write($this->signature);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getOldFiles(): array
+    {
+        if (!file_exists($directory = $this->cacheDir . '/classes')) {
+            return [];
+        }
+
+        $files = [];
+        foreach (Finder::create()->in($directory)->files() as $file) {
+            if (false !== $path = $file->getRealPath()) {
+                $files[] = $path;
+            }
+        }
+
+        return $files;
     }
 }

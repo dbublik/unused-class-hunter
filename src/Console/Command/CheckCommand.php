@@ -61,7 +61,7 @@ final class CheckCommand extends Command
         $config = new Config();
 
         if (null !== $configPath) {
-            if (!file_exists($configPath)) {
+            if (false === $configPath = realpath($configPath)) {
                 $io->error('The config file is not exists');
 
                 return Command::FAILURE;

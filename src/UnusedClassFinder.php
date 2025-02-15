@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter;
 
 use DBublik\UnusedClassHunter\Cache\Cache;
+use DBublik\UnusedClassHunter\Cache\Signature;
+use DBublik\UnusedClassHunter\Console\Application;
 use DBublik\UnusedClassHunter\Parser\ClassParser;
 use DBublik\UnusedClassHunter\Parser\FileParser;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
@@ -19,8 +21,14 @@ final readonly class UnusedClassFinder
         private Config $config,
     ) {
         $this->fileParser = new FileParser(
-            new Cache($config->getCacheDir()),
-            ClassParser::create(),
+            parser: ClassParser::create(),
+            cache: new Cache(
+                cacheDir: $config->getCacheDir(),
+                signature: new Signature(
+                    phpVersion: PHP_VERSION,
+                    packageVersion: Application::VERSION,
+                ),
+            ),
         );
     }
 

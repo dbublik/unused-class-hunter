@@ -12,8 +12,8 @@ use DBublik\UnusedClassHunter\ValueObject\FileNode;
 final readonly class FileParser
 {
     public function __construct(
-        private Cache $cache,
         private ClassParser $parser,
+        private Cache $cache,
     ) {}
 
     /**
