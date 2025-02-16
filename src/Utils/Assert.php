@@ -11,7 +11,7 @@ final readonly class Assert
      *
      * @phpstan-ignore missingType.iterableValue
      */
-    public static function listOfClassString(array $list): void
+    public static function listOfString(array $list): void
     {
         if (!array_is_list($list)) {
             throw new \InvalidArgumentException('Array must have a list of class');
@@ -21,15 +21,6 @@ final readonly class Assert
             if (!\is_string($class)) {
                 throw new \InvalidArgumentException(\sprintf('Class must be a string, got "%s"', \gettype($class)));
             }
-
-            self::classExists($class);
-        }
-    }
-
-    public static function classExists(string $class): void
-    {
-        if (!class_exists($class) && !interface_exists($class) && !trait_exists($class) && !enum_exists($class)) {
-            throw new \InvalidArgumentException(\sprintf('Class "%s" does not exist', $class));
         }
     }
 }
