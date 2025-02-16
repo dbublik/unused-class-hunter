@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Console\Command;
 
-use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\Console\Reporter\ReportFactory;
+use DBublik\UnusedClassHunter\Console\ConfigurationResolver;
 use DBublik\UnusedClassHunter\UnusedClassFinder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,12 +20,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class CheckCommand extends Command
 {
-    public function __construct(
-        private readonly ReportFactory $reportFactory = new ReportFactory(),
-    ) {
-        parent::__construct();
-    }
-
     #[\Override]
     protected function configure(): void
     {
@@ -42,49 +35,27 @@ final class CheckCommand extends Command
             $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output
         );
 
-        $configPath = $input->getOption('config');
+        $resolver = new ConfigurationResolver([
+            'config' => $input->getOption('config'),
+            'format' => $input->getOption('format'),
+        ]);
 
-        if (null !== $configPath && !\is_string($configPath)) {
-            $io->error('Option "config" must be a string');
-
-            return Command::FAILURE;
-        }
-
-        $format = $input->getOption('format');
-
-        if (!\is_string($format)) {
-            $io->error('Option "format" must be a string');
+        try {
+            $config = $resolver->getConfig();
+            $reporter = $resolver->getReporter();
+        } catch (\InvalidArgumentException $exception) {
+            $io->error($exception->getMessage());
 
             return Command::FAILURE;
-        }
-
-        $config = new Config();
-
-        if (null !== $configPath) {
-            if (false === $configPath = realpath($configPath)) {
-                $io->error('The config file is not exists');
-
-                return Command::FAILURE;
-            }
-
-            $config = include $configPath;
-
-            if (!$config instanceof Config) {
-                $io->error(
-                    \sprintf('The config file: "%s" does not return a "%s" instance.', $configPath, Config::class)
-                );
-
-                return Command::FAILURE;
-            }
         }
 
         foreach ($config->getBootstrapFiles() as $bootstrapFile) {
             require_once $bootstrapFile;
         }
 
-        $unusedClasses = (new UnusedClassFinder($config))->findClasses($io);
+        $finder = new UnusedClassFinder($config);
+        $unusedClasses = $finder->findClasses($io);
 
-        $reporter = $this->reportFactory->getReporter($format);
         $report = $reporter->generate($unusedClasses);
 
         $output->isDecorated() ? $output->write($report) : $output->write($report, false, OutputInterface::OUTPUT_RAW);
