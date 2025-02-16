@@ -19,6 +19,7 @@ final class Config
 {
     private Finder $finder;
     private string $cacheDir;
+    private bool $isStrictMode = false;
 
     /**
      * @var list<string>
@@ -71,6 +72,18 @@ final class Config
     public function setCacheDir(string $cacheDir): self
     {
         $this->cacheDir = $cacheDir;
+
+        return $this;
+    }
+
+    public function isStrictMode(): bool
+    {
+        return $this->isStrictMode;
+    }
+
+    public function allowStrictMode(): self
+    {
+        $this->isStrictMode = true;
 
         return $this;
     }

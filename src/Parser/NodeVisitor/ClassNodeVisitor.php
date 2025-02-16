@@ -15,12 +15,14 @@ use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\UseItem;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 
 final class ClassNodeVisitor extends NodeVisitorAbstract
 {
     public function __construct(
+        private readonly bool $isStrict,
         private ParsedFile $parsedFile = new ParsedFile(),
     ) {}
 
@@ -135,6 +137,13 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
             $parent instanceof Namespace_
             || $parent instanceof FuncCall
             || $parent instanceof ClassMethod
+        ) {
+            return;
+        }
+
+        if (
+            $this->isStrict
+            && $parent instanceof UseItem
         ) {
             return;
         }

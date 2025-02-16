@@ -11,13 +11,14 @@ use PhpParser\NodeVisitor\NodeConnectingVisitor;
 
 final class ClassNodeTraverser extends NodeTraverser
 {
-    public function __construct(
-        public readonly ClassNodeVisitor $visitor = new ClassNodeVisitor(),
-    ) {
+    public readonly ClassNodeVisitor $visitor;
+
+    public function __construct(bool $isStrict)
+    {
         parent::__construct(
             new NameResolver(),
             new NodeConnectingVisitor(),
-            $this->visitor,
+            $this->visitor = new ClassNodeVisitor($isStrict),
         );
     }
 }

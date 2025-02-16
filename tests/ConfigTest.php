@@ -34,6 +34,8 @@ final class ConfigTest extends TestCase
         self::assertFinderPropertySame($finder, 'mode', FileTypeFilterIterator::ONLY_FILES);
         self::assertFinderPropertySame($finder, 'iterators', []);
         self::assertSame(sys_get_temp_dir() . '/unused-class-hunter', $config->getCacheDir());
+        self::assertFalse($config->isStrictMode());
+        self::assertEmpty($config->getBootstrapFiles());
         self::assertCount(2, $config->getFilters());
         self::assertHasFilter($config, ClassFilter::class);
         self::assertHasFilter($config, AttributeFilter::class);
@@ -66,6 +68,15 @@ final class ConfigTest extends TestCase
         $config->setCacheDir($cacheDir);
 
         self::assertSame($cacheDir, $config->getCacheDir());
+    }
+
+    public function testAllowStrictMode(): void
+    {
+        $config = new Config();
+
+        $config->allowStrictMode();
+
+        self::assertTrue($config->isStrictMode());
     }
 
     public function testWithBootstrapFiles(): void

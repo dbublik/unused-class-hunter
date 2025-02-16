@@ -14,11 +14,11 @@ final readonly class ClassParser
         private ClassNodeTraverser $traverser,
     ) {}
 
-    public static function create(): self
+    public static function create(bool $isStrict): self
     {
         return new self(
             (new ParserFactory())->createForHostVersion(),
-            new ClassNodeTraverser(),
+            new ClassNodeTraverser($isStrict),
         );
     }
 

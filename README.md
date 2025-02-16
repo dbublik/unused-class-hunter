@@ -57,13 +57,8 @@ The first two are to specify the classes or the attributes of these classes in t
 declare(strict_types=1);
 
 use DBublik\UnusedClassHunter\Config;
-use Symfony\Component\Finder\Finder;
-
-$finder = Finder::create()
-    ->in(__DIR__);
 
 return (new Config())
-    ->setFinder($finder)
     ->withIgnoredClasses(
         \ExampleNamespace\FirstExampleClass::class,
         \ExampleNamespace\SecondExampleClass::class,
@@ -108,13 +103,8 @@ final readonly class ExampleFilter implements FilterInterface
 declare(strict_types=1);
 
 use DBublik\UnusedClassHunter\Config;
-use Symfony\Component\Finder\Finder;
-
-$finder = Finder::create()
-    ->in(__DIR__);
 
 return (new Config())
-    ->setFinder($finder)
     ->withFilters(
         new \ExampleNamespace\Filter\ExampleFilter(),
     );
@@ -130,13 +120,8 @@ The Hunter contains several predefined sets for different libraries, which can b
 declare(strict_types=1);
 
 use DBublik\UnusedClassHunter\Config;
-use Symfony\Component\Finder\Finder;
-
-$finder = Finder::create()
-    ->in(__DIR__);
 
 return (new Config())
-    ->setFinder($finder)
     ->withSets(
         symfony: true,
         doctrine: true,
@@ -158,13 +143,8 @@ You can override this by setting the `setCacheDir` method:
 declare(strict_types=1);
 
 use DBublik\UnusedClassHunter\Config;
-use Symfony\Component\Finder\Finder;
-
-$finder = Finder::create()
-    ->in(__DIR__);
 
 return (new Config())
-    ->setFinder($finder)
     ->setCacheDir(__DIR__ . '/var/cache');
 ```
 
@@ -179,17 +159,32 @@ your own bootstrap files:
 declare(strict_types=1);
 
 use DBublik\UnusedClassHunter\Config;
-use Symfony\Component\Finder\Finder;
-
-$finder = Finder::create()
-    ->in(__DIR__);
 
 return (new Config())
-    ->setFinder($finder)
     ->withBootstrapFiles(
         __DIR__ . '/example/bootstrap.php',
     );
 ```
+
+## Strict mode
+
+If you want the strictest rules, you can enable this:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use DBublik\UnusedClassHunter\Config;
+use Symfony\Component\Finder\Finder;
+
+return (new Config())
+    ->allowStrictMode();
+```
+
+List of them:
+
+- Classes that are only listed in phpdoc are not considered to be used;
 
 ## Supported PHP versions
 

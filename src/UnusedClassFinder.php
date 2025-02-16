@@ -21,7 +21,9 @@ final readonly class UnusedClassFinder
         private Config $config,
     ) {
         $this->fileParser = new FileParser(
-            parser: ClassParser::create(),
+            parser: ClassParser::create(
+                isStrict: $config->isStrictMode(),
+            ),
             cache: new Cache(
                 cacheDir: $config->getCacheDir(),
                 signature: new Signature(
