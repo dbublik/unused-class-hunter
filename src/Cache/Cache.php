@@ -44,7 +44,7 @@ final class Cache
         $cacheFile = $this->getFile($file);
         $this->newFiles[] = $cacheFile->getName();
 
-        if (true === $this->signatureWasUpdated) {
+        if ($this->signatureWasUpdated) {
             return null;
         }
 

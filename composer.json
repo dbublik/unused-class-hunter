@@ -46,10 +46,7 @@
             "@composer normalize --working-dir=tools ../composer.json",
             "@composer normalize --working-dir=tools composer.json"
         ],
-        "normalize:check": [
-            "@composer normalize --working-dir=tools --dry-run ../composer.json",
-            "@composer normalize --working-dir=tools --dry-run composer.json"
-        ],
+        "normalize:check": "@normalize --dry-run",
         "phpstan": "@php tools/vendor/bin/phpstan analyse",
         "quality-assurance": [
             "@install-tools --quiet",
@@ -57,6 +54,8 @@
             "@static-analysis",
             "@tests"
         ],
+        "rector": "@php tools/vendor/bin/rector process",
+        "rector:check": "@rector --dry-run",
         "self-check": [
             "@composer dump-autoload --dry-run --optimize --strict-psr",
             "@normalize:check"
@@ -64,7 +63,8 @@
         "static-analysis": [
             "@cs:check",
             "@phpstan",
-            "@hunter"
+            "@hunter",
+            "@rector:check"
         ],
         "tests": "@php phpunit"
     }

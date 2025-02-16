@@ -12,7 +12,7 @@ final readonly class CodeceptionTestFilter implements FilterInterface
     #[\Override]
     public function isIgnored(ClassNode $class, ReaderResult $reader): bool
     {
-        if (!str_ends_with((string) $class->getName(), 'Cest')) {
+        if (!str_ends_with($class->getName(), 'Cest')) {
             return false;
         }
 
