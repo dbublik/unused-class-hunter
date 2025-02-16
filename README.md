@@ -40,10 +40,10 @@ return (new Config())
     ->setFinder($finder);
 ```
 
-And the following command:
+If your config file has another path, you can specify this via the "config" option:
 
 ```bash
-./vendor/bin/unused-class-hunter check --config=.unused-class-hunter.php
+./vendor/bin/unused-class-hunter check --config=example/directory/.unused-class-hunter.php
 ```
 
 ### Ignoring classes:
@@ -150,7 +150,7 @@ return (new Config())
 
 By default, the Hunter stores its cache files in `sys_get_temp_dir() . '/unused-class-hunter'` (usually
 `/tmp/unused-class-hunter`).
-You can override this by setting the tmpDir parameter:
+You can override this by setting the `setCacheDir` method:
 
 ```php
 <?php
