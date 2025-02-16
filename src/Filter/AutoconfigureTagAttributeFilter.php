@@ -12,7 +12,7 @@ final readonly class AutoconfigureTagAttributeFilter implements FilterInterface
     private const string AUTOCONFIGURE_TAG_CLASS = '\Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag';
 
     public function __construct(
-        private int $maxDeep = 2,
+        private int $maxDeep = 3,
     ) {}
 
     #[\Override]
