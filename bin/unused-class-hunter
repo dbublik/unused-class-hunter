@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 use DBublik\UnusedClassHunter\Console\Application;
 
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
 // check environment requirements
 (static function (): void {
     if (\PHP_VERSION_ID < 80300) {
