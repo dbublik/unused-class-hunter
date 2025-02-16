@@ -33,7 +33,7 @@ final class ConfigTest extends TestCase
         self::assertFinderPropertySame($finder, 'sort', SortableIterator::SORT_BY_NAME);
         self::assertFinderPropertySame($finder, 'mode', FileTypeFilterIterator::ONLY_FILES);
         self::assertFinderPropertySame($finder, 'iterators', []);
-        self::assertSame(sys_get_temp_dir(), $config->getCacheDir());
+        self::assertSame(sys_get_temp_dir() . '/unused-class-hunter', $config->getCacheDir());
         self::assertCount(2, $config->getFilters());
         self::assertHasFilter($config, ClassFilter::class);
         self::assertHasFilter($config, AttributeFilter::class);
@@ -66,6 +66,40 @@ final class ConfigTest extends TestCase
         $config->setCacheDir($cacheDir);
 
         self::assertSame($cacheDir, $config->getCacheDir());
+    }
+
+    public function testWithBootstrapFiles(): void
+    {
+        $config = new Config();
+        $file = __DIR__ . '/../vendor/autoload.php';
+
+        $config->withBootstrapFiles($file);
+
+        self::assertSame([$file], $config->getBootstrapFiles());
+    }
+
+    public function testWithBootstrapFilesNotExists(): void
+    {
+        $config = new Config();
+        $file = __DIR__ . '/kbczkjxhoahb';
+
+        $this->expectExceptionObject(
+            new \InvalidArgumentException(\sprintf('Bootstrap file "%s" does not exist', $file))
+        );
+
+        $config->withBootstrapFiles($file);
+    }
+
+    public function testWithBootstrapFilesNotFile(): void
+    {
+        $config = new Config();
+        $file = __DIR__ . '/../vendor';
+
+        $this->expectExceptionObject(
+            new \InvalidArgumentException(\sprintf('Bootstrap file "%s" does not exist', $file))
+        );
+
+        $config->withBootstrapFiles($file);
     }
 
     public function testWithFilters(): void

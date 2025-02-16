@@ -120,24 +120,6 @@ return (new Config())
     );
 ```
 
-### Custom cache directory:
-
-```php
-<?php
-
-declare(strict_types=1);
-
-use DBublik\UnusedClassHunter\Config;
-use Symfony\Component\Finder\Finder;
-
-$finder = Finder::create()
-    ->in(__DIR__);
-
-return (new Config())
-    ->setFinder($finder)
-    ->setCacheDir(__DIR__ . '/var/cache');
-```
-
 ### Sets for some libraries:
 
 The Hunter contains several predefined sets for different libraries, which can be enabled with this config:
@@ -161,6 +143,51 @@ return (new Config())
         twig: true,
         phpunit: true,
         codeception: true,
+    );
+```
+
+### Custom cache directory:
+
+By default, the Hunter stores its cache files in `sys_get_temp_dir() . '/unused-class-hunter'` (usually
+`/tmp/unused-class-hunter`).
+You can override this by setting the tmpDir parameter:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use DBublik\UnusedClassHunter\Config;
+use Symfony\Component\Finder\Finder;
+
+$finder = Finder::create()
+    ->in(__DIR__);
+
+return (new Config())
+    ->setFinder($finder)
+    ->setCacheDir(__DIR__ . '/var/cache');
+```
+
+### Custom bootstrap files:
+
+If you need to initialize something in PHP runtime before the Hunter runs (like your own autoloader), you can provide
+your own bootstrap files:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use DBublik\UnusedClassHunter\Config;
+use Symfony\Component\Finder\Finder;
+
+$finder = Finder::create()
+    ->in(__DIR__);
+
+return (new Config())
+    ->setFinder($finder)
+    ->withBootstrapFiles(
+        __DIR__ . '/example/bootstrap.php',
     );
 ```
 

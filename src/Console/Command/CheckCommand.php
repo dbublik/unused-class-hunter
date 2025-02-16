@@ -78,6 +78,10 @@ final class CheckCommand extends Command
             }
         }
 
+        foreach ($config->getBootstrapFiles() as $bootstrapFile) {
+            require_once $bootstrapFile;
+        }
+
         $unusedClasses = (new UnusedClassFinder($config))->findClasses($io);
 
         $reporter = $this->reportFactory->getReporter($format);

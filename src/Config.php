@@ -21,6 +21,11 @@ final class Config
     private string $cacheDir;
 
     /**
+     * @var list<string>
+     */
+    private array $bootstrapFiles = [];
+
+    /**
      * @var array<class-string<FilterInterface>, FilterInterface>
      */
     private array $filters = [];
@@ -38,7 +43,7 @@ final class Config
     public function __construct()
     {
         $this->finder = Finder::create()->in((string) getcwd());
-        $this->cacheDir = sys_get_temp_dir();
+        $this->cacheDir = sys_get_temp_dir() . '/unused-class-hunter';
         $this->withFilters(new ClassFilter(), new AttributeFilter());
     }
 
@@ -66,6 +71,27 @@ final class Config
     public function setCacheDir(string $cacheDir): self
     {
         $this->cacheDir = $cacheDir;
+
+        return $this;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getBootstrapFiles(): array
+    {
+        return $this->bootstrapFiles;
+    }
+
+    public function withBootstrapFiles(string ...$bootstrapFiles): self
+    {
+        foreach ($bootstrapFiles as $bootstrapFile) {
+            if (!file_exists($bootstrapFile) || !is_file($bootstrapFile)) {
+                throw new \InvalidArgumentException(\sprintf('Bootstrap file "%s" does not exist', $bootstrapFile));
+            }
+
+            $this->bootstrapFiles[] = $bootstrapFile;
+        }
 
         return $this;
     }
