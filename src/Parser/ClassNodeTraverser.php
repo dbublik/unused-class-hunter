@@ -13,7 +13,7 @@ final class ClassNodeTraverser extends NodeTraverser
 {
     public readonly ClassNodeVisitor $visitor;
 
-    public function __construct(bool $isStrict)
+    public function __construct(bool $isStrict = false)
     {
         parent::__construct(
             new NameResolver(),

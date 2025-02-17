@@ -9,7 +9,7 @@ use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\FileNode;
 use Symfony\Component\Finder\Finder;
 
-final class Cache
+final class Cache implements CacheInterface
 {
     private readonly FileHandler $rootCacheFile;
     private bool $signatureWasUpdated = true;
@@ -39,6 +39,7 @@ final class Cache
     /**
      * @param non-empty-string $file
      */
+    #[\Override]
     public function get(string $file): ?AbstractFileNode
     {
         $cacheFile = $this->getFile($file);
@@ -62,6 +63,7 @@ final class Cache
     /**
      * @param non-empty-string $file
      */
+    #[\Override]
     public function set(string $file, AbstractFileNode $fileNode): void
     {
         $this->getFile($file)->write($fileNode);

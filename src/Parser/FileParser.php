@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Parser;
 
-use DBublik\UnusedClassHunter\Cache\Cache;
+use DBublik\UnusedClassHunter\Cache\CacheInterface;
 use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\FileNode;
@@ -13,7 +13,7 @@ final readonly class FileParser
 {
     public function __construct(
         private ClassParser $parser,
-        private Cache $cache,
+        private CacheInterface $cache,
     ) {}
 
     /**
@@ -37,7 +37,7 @@ final readonly class FileParser
      */
     private function parseFile(string $file): AbstractFileNode
     {
-        if (false === $code = file_get_contents($file)) {
+        if (false === $code = @file_get_contents($file)) {
             throw new \RuntimeException(\sprintf('Unable to read file %s', $file));
         }
 

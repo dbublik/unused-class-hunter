@@ -22,7 +22,7 @@ use PhpParser\NodeVisitorAbstract;
 final class ClassNodeVisitor extends NodeVisitorAbstract
 {
     public function __construct(
-        private readonly bool $isStrict,
+        private readonly bool $isStrict = false,
         private ParsedFile $parsedFile = new ParsedFile(),
     ) {}
 
@@ -76,11 +76,8 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
         // @phpstan-ignore argument.type
         $this->parsedFile->setClassName($namespace->toString());
 
-        if (
-            is_numeric($startLine = $node->getAttribute('startLine'))
-            && (int) $startLine > 0
-        ) {
-            $this->parsedFile->setClassStartLine((int) $startLine);
+        if (0 < $startLine = $node->getStartLine()) {
+            $this->parsedFile->setClassStartLine($startLine);
         }
 
         if (

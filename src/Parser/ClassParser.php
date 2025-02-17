@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Parser;
 
+use PhpParser\Error;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
@@ -14,7 +15,7 @@ final readonly class ClassParser
         private ClassNodeTraverser $traverser,
     ) {}
 
-    public static function create(bool $isStrict): self
+    public static function create(bool $isStrict = false): self
     {
         return new self(
             (new ParserFactory())->createForHostVersion(),
@@ -22,9 +23,18 @@ final readonly class ClassParser
         );
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     public function parse(string $code): ParsedFile
     {
-        if (null === $nodes = $this->parser->parse($code)) {
+        try {
+            $nodes = $this->parser->parse($code);
+        } catch (Error $error) {
+            throw new \RuntimeException(\sprintf('Parse error: %s', $error->getMessage()), $error->getCode(), $error);
+        }
+
+        if (null === $nodes) {
             throw new \RuntimeException(\sprintf('Parse error: %s', $code));
         }
 
