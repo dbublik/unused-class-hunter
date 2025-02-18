@@ -21,13 +21,13 @@ final readonly class ClassNode extends AbstractFileNode
         private string $name,
         /** @var non-negative-int */
         private int $startLine,
-        private bool $hasApiTag,
+        private bool $hasApiTag = false,
         /** @var list<class-string> */
-        private array $extends,
+        private array $extends = [],
         /** @var list<class-string> */
-        private array $implements,
+        private array $implements = [],
         /** @var list<class-string> */
-        private array $attributes,
+        private array $attributes = [],
     ) {
         parent::__construct($file, $usedClasses);
 

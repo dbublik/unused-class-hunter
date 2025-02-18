@@ -7,7 +7,7 @@ namespace DBublik\UnusedClassHunter\Filter;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 
-final readonly class CodeceptionTestFilter implements FilterInterface
+final readonly class CodeceptionTestClassFilter implements FilterInterface
 {
     #[\Override]
     public function isIgnored(ClassNode $class, ReaderResult $reader): bool

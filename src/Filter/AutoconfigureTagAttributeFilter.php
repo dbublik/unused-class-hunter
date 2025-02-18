@@ -28,7 +28,10 @@ final readonly class AutoconfigureTagAttributeFilter implements FilterInterface
     private function hasAttribute(ClassNode $class): bool
     {
         foreach ($class->getAttributes() as $attribute) {
-            if (is_a($attribute, self::AUTOCONFIGURE_TAG_CLASS, true)) {
+            if (
+                self::AUTOCONFIGURE_TAG_CLASS === $attribute
+                || is_a($attribute, self::AUTOCONFIGURE_TAG_CLASS, true)
+            ) {
                 return true;
             }
         }

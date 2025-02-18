@@ -21,7 +21,10 @@ final readonly class AttributeFilter implements FilterInterface
 
         foreach ($ignoredAttributes as $ignoredAttribute) {
             foreach ($attributes as $attribute) {
-                if (is_a($attribute, $ignoredAttribute, true)) {
+                if (
+                    $ignoredAttribute === $attribute
+                    || is_a($attribute, $ignoredAttribute, true)
+                ) {
                     return true;
                 }
             }
