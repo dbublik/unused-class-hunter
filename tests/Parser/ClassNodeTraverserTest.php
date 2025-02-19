@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(ClassNodeTraverser::class)]
 final class ClassNodeTraverserTest extends TestCase
 {
-    public function testCreate(): void
+    public function testConstructor(): void
     {
         $traverser = new ClassNodeTraverser();
 

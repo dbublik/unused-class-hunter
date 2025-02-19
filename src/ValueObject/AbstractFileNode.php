@@ -17,7 +17,8 @@ abstract readonly class AbstractFileNode implements \JsonSerializable
         /** @var list<class-string> */
         private array $usedClasses,
     ) {
-        Assert::listOfString($this->usedClasses);
+        Assert::nonEmptyString($file);
+        Assert::listOfStrings($this->usedClasses);
     }
 
     /**

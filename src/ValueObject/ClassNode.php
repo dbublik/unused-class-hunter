@@ -31,9 +31,9 @@ final readonly class ClassNode extends AbstractFileNode
     ) {
         parent::__construct($file, $usedClasses);
 
-        Assert::listOfString($extends);
-        Assert::listOfString($implements);
-        Assert::listOfString($attributes);
+        Assert::listOfStrings($extends);
+        Assert::listOfStrings($implements);
+        Assert::listOfStrings($attributes);
     }
 
     /**

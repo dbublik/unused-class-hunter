@@ -23,7 +23,7 @@ use Symfony\Component\Finder\Iterator\SortableIterator;
 #[CoversClass(Config::class)]
 final class ConfigTest extends TestCase
 {
-    public function testCreate(): void
+    public function testConstructor(): void
     {
         $config = new Config();
 

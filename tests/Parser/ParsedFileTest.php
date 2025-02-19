@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(ParsedFile::class)]
 final class ParsedFileTest extends TestCase
 {
-    public function testCreate(): void
+    public function testConstructor(): void
     {
         $parsedFile = new ParsedFile();
 
