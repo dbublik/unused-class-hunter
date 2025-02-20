@@ -46,9 +46,21 @@ final class GitlabReporterTest extends TestCase
         ];
 
         yield [
-            new ReportSummary([
-                new ClassNode(__FILE__, [], self::class, 1),
-            ]),
+            new ReportSummary(
+                unusedClasses: [new ClassNode(__FILE__, [], self::class, 1)],
+                isDecoratedOutput: true,
+            ),
+            \sprintf(
+                '[%s]',
+                self::getReportLine(__FILE__, self::class, 1)
+            ),
+        ];
+
+        yield [
+            new ReportSummary(
+                unusedClasses: [new ClassNode(__FILE__, [], self::class, 1)],
+                isDecoratedOutput: false,
+            ),
             \sprintf(
                 '[%s]',
                 self::getReportLine(__FILE__, self::class, 1)

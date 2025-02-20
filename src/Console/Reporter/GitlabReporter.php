@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Console\Reporter;
 
+use Symfony\Component\Console\Formatter\OutputFormatter;
+
 final readonly class GitlabReporter implements ReporterInterface
 {
     #[\Override]
@@ -34,6 +36,13 @@ final readonly class GitlabReporter implements ReporterInterface
             ];
         }
 
-        return json_encode($report, JSON_THROW_ON_ERROR);
+        $jsonReport = json_encode($report, JSON_THROW_ON_ERROR);
+
+        if ($summary->isDecoratedOutput) {
+            /** @var non-empty-string $jsonReport */
+            $jsonReport = OutputFormatter::escape($jsonReport);
+        }
+
+        return $jsonReport;
     }
 }

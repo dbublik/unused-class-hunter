@@ -20,19 +20,27 @@ final readonly class TextReporter implements ReporterInterface
     #[\Override]
     public function generate(ReportSummary $summary): string
     {
+        $output = '';
+
         if ([] === $summary->unusedClasses) {
-            $output = '<info>Success! The hunt is over — no unused classes found.</info>';
+            $result = 'Success! The hunt is over — no unused classes found.';
+
+            $output .= $summary->isDecoratedOutput ? \sprintf('<info>%s</info>', $result) : $result;
         } else {
-            $output = '';
             foreach ($summary->unusedClasses as $unusedClass) {
-                $output .= '<comment>' . $this->getRelativeFile($unusedClass) . '</comment>' . PHP_EOL;
+                $file = $this->getRelativeFile($unusedClass);
+
+                $output .= $summary->isDecoratedOutput ? \sprintf('<comment>%s</comment>', $file) : $file;
+                $output .= PHP_EOL;
             }
 
             $output .= PHP_EOL;
-            $output .= \sprintf(
-                '<error>The hunt is over! %s unused classes detected.</error>',
+
+            $result = \sprintf(
+                'The hunt is over! %s unused classes detected.',
                 \count($summary->unusedClasses)
             );
+            $output .= $summary->isDecoratedOutput ? \sprintf('<error>%s</error>', $result) : $result;
         }
 
         $output .= PHP_EOL . PHP_EOL;
