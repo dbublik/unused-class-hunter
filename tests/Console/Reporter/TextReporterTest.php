@@ -41,34 +41,48 @@ final class TextReporterTest extends TestCase
     public static function provideGenerate(): iterable
     {
         yield [
-            new ReportSummary([]),
+            new ReportSummary(unusedClasses: [], duration: 1.203, memory: 13_000_000),
             '<info>Success! The hunt is over — no unused classes found.</info>
+
+Duration 1.203 seconds, 12.40 MB memory used.
 
 ',
         ];
 
         yield [
-            new ReportSummary([
-                new ClassNode(__FILE__, [], self::class, 1),
-            ]),
-            'tests/Console/Reporter/TextReporterTest.php
+            new ReportSummary(
+                unusedClasses: [
+                    new ClassNode(__FILE__, [], self::class, 1),
+                ],
+                duration: 12.045,
+                memory: 262_200_000,
+            ),
+            '<comment>tests/Console/Reporter/TextReporterTest.php</comment>
 
 <error>The hunt is over! 1 unused classes detected.</error>
 
+Duration 12.045 seconds, 250.05 MB memory used.
+
 ',
         ];
 
         yield [
-            new ReportSummary([
-                new ClassNode(__FILE__, [], self::class, 1),
-                new ClassNode(__DIR__ . '/TestCase.php', [], TestCase::class, 1),
-                new ClassNode(__DIR__ . '/Assert.php', [], Assert::class, 1),
-            ]),
-            'tests/Console/Reporter/TextReporterTest.php
-tests/Console/Reporter/TestCase.php
-tests/Console/Reporter/Assert.php
+            new ReportSummary(
+                unusedClasses: [
+                    new ClassNode(__FILE__, [], self::class, 1),
+                    new ClassNode(__DIR__ . '/TestCase.php', [], TestCase::class, 1),
+                    new ClassNode(__DIR__ . '/Assert.php', [], Assert::class, 1),
+                ],
+                duration: 3.920,
+                memory: 90_000_000,
+            ),
+            '<comment>tests/Console/Reporter/TextReporterTest.php</comment>
+<comment>tests/Console/Reporter/TestCase.php</comment>
+<comment>tests/Console/Reporter/Assert.php</comment>
 
 <error>The hunt is over! 3 unused classes detected.</error>
+
+Duration 3.920 seconds, 85.83 MB memory used.
 
 ',
         ];

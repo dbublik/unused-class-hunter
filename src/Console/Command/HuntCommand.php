@@ -62,7 +62,7 @@ final class HuntCommand extends Command
         $report = $reporter->generate(
             new ReportSummary(
                 unusedClasses: $unusedClasses,
-                duration: (int) (microtime(true) - $startTime),
+                duration: microtime(true) - $startTime,
                 memory: memory_get_usage(true),
                 isDecoratedOutput: $output->isDecorated(),
             )
