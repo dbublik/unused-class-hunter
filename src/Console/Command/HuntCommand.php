@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter\Console\Command;
 
 use DBublik\UnusedClassHunter\Console\ConfigurationResolver;
+use DBublik\UnusedClassHunter\Console\Reporter\ReportSummary;
 use DBublik\UnusedClassHunter\UnusedClassFinder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -53,10 +54,19 @@ final class HuntCommand extends Command
             require_once $bootstrapFile;
         }
 
+        $startTime = microtime(true);
+
         $finder = new UnusedClassFinder($config);
         $unusedClasses = $finder->findClasses($io);
 
-        $report = $reporter->generate($unusedClasses);
+        $report = $reporter->generate(
+            new ReportSummary(
+                unusedClasses: $unusedClasses,
+                duration: (int) (microtime(true) - $startTime),
+                memory: memory_get_usage(true),
+                isDecoratedOutput: $output->isDecorated(),
+            )
+        );
 
         $output->isDecorated() ? $output->write($report) : $output->write($report, false, OutputInterface::OUTPUT_RAW);
 

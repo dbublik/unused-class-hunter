@@ -40,7 +40,7 @@
         ],
         "cs": "@php tools/vendor/bin/php-cs-fixer fix",
         "cs:check": "@php tools/vendor/bin/php-cs-fixer check --verbose --diff",
-        "hunter": "@php bin/unused-class-hunter check",
+        "hunter": "@php bin/unused-class-hunter hunt",
         "install-tools": "@composer --working-dir=tools install",
         "normalize": [
             "@composer normalize --working-dir=tools ../composer.json",

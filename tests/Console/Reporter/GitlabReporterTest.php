@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter\Tests\Console\Reporter;
 
 use DBublik\UnusedClassHunter\Console\Reporter\GitlabReporter;
+use DBublik\UnusedClassHunter\Console\Reporter\ReportSummary;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -24,33 +25,30 @@ final class GitlabReporterTest extends TestCase
         self::assertSame('gitlab', $reporter->getFormat());
     }
 
-    /**
-     * @param list<ClassNode> $unusedClasses
-     */
     #[DataProvider('provideGenerate')]
-    public function testGenerate(array $unusedClasses, string $expectedReport): void
+    public function testGenerate(ReportSummary $reportSummary, string $expectedReport): void
     {
         $reporter = new GitlabReporter();
 
-        $report = $reporter->generate($unusedClasses);
+        $report = $reporter->generate($reportSummary);
 
         self::assertSame($expectedReport, $report);
     }
 
     /**
-     * @return iterable<array{0: list<ClassNode>, 1: string}>
+     * @return iterable<array{0: ReportSummary, 1: string}>
      */
     public static function provideGenerate(): iterable
     {
         yield [
-            [],
+            new ReportSummary([]),
             '[]',
         ];
 
         yield [
-            [
+            new ReportSummary([
                 new ClassNode(__FILE__, [], self::class, 1),
-            ],
+            ]),
             \sprintf(
                 '[%s]',
                 self::getReportLine(__FILE__, self::class, 1)
@@ -58,11 +56,11 @@ final class GitlabReporterTest extends TestCase
         ];
 
         yield [
-            [
+            new ReportSummary([
                 new ClassNode(__FILE__, [], self::class, 11),
                 new ClassNode(__DIR__ . '/TestCase.php', [], TestCase::class, 5),
                 new ClassNode(__DIR__ . '/Assert.php', [], Assert::class, 9),
-            ],
+            ]),
             \sprintf(
                 '[%s,%s,%s]',
                 self::getReportLine(__FILE__, self::class, 11),

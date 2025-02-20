@@ -15,24 +15,25 @@ final readonly class TextReporter implements ReporterInterface
     }
 
     /**
-     * @param list<ClassNode> $unusedClasses
-     *
      * @return non-empty-string
      */
     #[\Override]
-    public function generate(array $unusedClasses): string
+    public function generate(ReportSummary $summary): string
     {
-        if ([] === $unusedClasses) {
+        if ([] === $summary->unusedClasses) {
             return '<info>Success! The hunt is over — no unused classes found.</info>' . PHP_EOL . PHP_EOL;
         }
 
         $output = '';
-        foreach ($unusedClasses as $unusedClass) {
+        foreach ($summary->unusedClasses as $unusedClass) {
             $output .= $this->getRelativeFile($unusedClass) . PHP_EOL;
         }
 
         $output .= PHP_EOL;
-        $output .= \sprintf('<error>The hunt is over! %s unused classes detected.</error>', \count($unusedClasses));
+        $output .= \sprintf(
+            '<error>The hunt is over! %s unused classes detected.</error>',
+            \count($summary->unusedClasses)
+        );
 
         return $output . PHP_EOL . PHP_EOL;
     }

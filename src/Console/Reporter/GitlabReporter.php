@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Console\Reporter;
 
-use DBublik\UnusedClassHunter\ValueObject\ClassNode;
-
 final readonly class GitlabReporter implements ReporterInterface
 {
     #[\Override]
@@ -15,16 +13,14 @@ final readonly class GitlabReporter implements ReporterInterface
     }
 
     /**
-     * @param list<ClassNode> $unusedClasses
-     *
      * @return non-empty-string
      */
     #[\Override]
-    public function generate(array $unusedClasses): string
+    public function generate(ReportSummary $summary): string
     {
         $report = [];
 
-        foreach ($unusedClasses as $unusedClass) {
+        foreach ($summary->unusedClasses as $unusedClass) {
             $report[] = [
                 'description' => \sprintf('The %s class is not used.', $unusedClass->getName()),
                 'fingerprint' => md5($unusedClass->getFile()),

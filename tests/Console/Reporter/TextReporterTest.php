@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Tests\Console\Reporter;
 
+use DBublik\UnusedClassHunter\Console\Reporter\ReportSummary;
 use DBublik\UnusedClassHunter\Console\Reporter\TextReporter;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use PHPUnit\Framework\Assert;
@@ -24,35 +25,32 @@ final class TextReporterTest extends TestCase
         self::assertSame('text', $reporter->getFormat());
     }
 
-    /**
-     * @param list<ClassNode> $unusedClasses
-     */
     #[DataProvider('provideGenerate')]
-    public function testGenerate(array $unusedClasses, string $expectedReport): void
+    public function testGenerate(ReportSummary $reportSummary, string $expectedReport): void
     {
         $reporter = new TextReporter();
 
-        $report = $reporter->generate($unusedClasses);
+        $report = $reporter->generate($reportSummary);
 
         self::assertSame($expectedReport, $report);
     }
 
     /**
-     * @return iterable<array{0: list<ClassNode>, 1: string}>
+     * @return iterable<array{0: ReportSummary, 1: string}>
      */
     public static function provideGenerate(): iterable
     {
         yield [
-            [],
+            new ReportSummary([]),
             '<info>Success! The hunt is over — no unused classes found.</info>
 
 ',
         ];
 
         yield [
-            [
+            new ReportSummary([
                 new ClassNode(__FILE__, [], self::class, 1),
-            ],
+            ]),
             'tests/Console/Reporter/TextReporterTest.php
 
 <error>The hunt is over! 1 unused classes detected.</error>
@@ -61,11 +59,11 @@ final class TextReporterTest extends TestCase
         ];
 
         yield [
-            [
+            new ReportSummary([
                 new ClassNode(__FILE__, [], self::class, 1),
                 new ClassNode(__DIR__ . '/TestCase.php', [], TestCase::class, 1),
                 new ClassNode(__DIR__ . '/Assert.php', [], Assert::class, 1),
-            ],
+            ]),
             'tests/Console/Reporter/TextReporterTest.php
 tests/Console/Reporter/TestCase.php
 tests/Console/Reporter/Assert.php
