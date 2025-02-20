@@ -13,6 +13,7 @@ final readonly class ReportSummary
         public array $unusedClasses,
         public float $duration = 0,
         public int $memory = 0,
+        public bool $isDeletable = false,
         public bool $isDecoratedOutput = true,
     ) {}
 }

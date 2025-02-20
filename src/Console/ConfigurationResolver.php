@@ -87,4 +87,9 @@ final readonly class ConfigurationResolver
 
         return (new ReportFactory())->getReporter($format);
     }
+
+    public function isDeletable(): bool
+    {
+        return true === ($this->options['delete'] ?? false);
+    }
 }

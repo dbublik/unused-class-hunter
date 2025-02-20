@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'hunt',
-    description: 'Find classes that are not used in any config and in the code.',
+    description: 'Find and delete classes that are not used in any config and in the code.',
 )]
 final class HuntCommand extends Command
 {
@@ -26,6 +26,7 @@ final class HuntCommand extends Command
     {
         $this->addOption('config', null, InputOption::VALUE_REQUIRED, 'The path to a config file.');
         $this->addOption('format', null, InputOption::VALUE_REQUIRED, 'To output results in other formats.');
+        $this->addOption('delete', null, InputOption::VALUE_NEGATABLE, 'Delete all classes that are not used.');
     }
 
     #[\Override]
@@ -39,6 +40,7 @@ final class HuntCommand extends Command
         $resolver = new ConfigurationResolver([
             'config' => $input->getOption('config'),
             'format' => $input->getOption('format'),
+            'delete' => $input->getOption('delete'),
         ]);
 
         try {
@@ -59,11 +61,18 @@ final class HuntCommand extends Command
         $finder = new UnusedClassFinder($config);
         $unusedClasses = $finder->findClasses($io);
 
+        if ($resolver->isDeletable()) {
+            foreach ($unusedClasses as $unusedClass) {
+                unlink($unusedClass->getFile());
+            }
+        }
+
         $report = $reporter->generate(
             new ReportSummary(
                 unusedClasses: $unusedClasses,
                 duration: microtime(true) - $startTime,
                 memory: memory_get_usage(true),
+                isDeletable: $resolver->isDeletable(),
                 isDecoratedOutput: $output->isDecorated(),
             )
         );

@@ -30,15 +30,21 @@ final readonly class TextReporter implements ReporterInterface
             foreach ($summary->unusedClasses as $unusedClass) {
                 $file = $this->getRelativeFile($unusedClass);
 
-                $output .= $summary->isDecoratedOutput ? \sprintf('<comment>%s</comment>', $file) : $file;
+                if ($summary->isDeletable) {
+                    $output .= \sprintf('[-] %s', $file);
+                } else {
+                    $output .= $summary->isDecoratedOutput ? \sprintf('<comment>%s</comment>', $file) : $file;
+                }
+
                 $output .= PHP_EOL;
             }
 
             $output .= PHP_EOL;
 
             $result = \sprintf(
-                'The hunt is over! %s unused classes detected.',
-                \count($summary->unusedClasses)
+                'The hunt is over! %s unused classes %s.',
+                \count($summary->unusedClasses),
+                $summary->isDeletable ? 'deleted' : 'detected',
             );
             $output .= $summary->isDecoratedOutput ? \sprintf('<error>%s</error>', $result) : $result;
         }

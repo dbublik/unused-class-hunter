@@ -17,6 +17,11 @@ After installation, you can run the following command to start hunting:
 ```
 
 And that’s it! The Hunter will scan your entire codebase and find all unused classes.
+If you want to delete them immediately, just run the command:
+
+```bash
+./vendor/bin/unused-class-hunter hunt --delete
+```
 
 ## Customization
 
@@ -185,6 +190,14 @@ return (new Config())
 List of them:
 
 - Classes that are only listed in phpdoc are not considered to be used;
+
+## Output format
+
+The Hunter supports `text` (by default) and `gitlab` formats.
+
+```bash
+./vendor/bin/unused-class-hunter hunt --format=gitlab
+```
 
 ## Supported PHP versions
 
