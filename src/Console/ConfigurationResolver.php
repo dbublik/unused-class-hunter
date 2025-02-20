@@ -7,15 +7,22 @@ namespace DBublik\UnusedClassHunter\Console;
 use DBublik\UnusedClassHunter\Config;
 use DBublik\UnusedClassHunter\Console\Reporter\ReporterInterface;
 use DBublik\UnusedClassHunter\Console\Reporter\ReportFactory;
+use DBublik\UnusedClassHunter\Console\Reporter\TextReporter;
 
 final readonly class ConfigurationResolver
 {
+    private string $rootDirectory;
+
     /**
      * @param array<string, mixed> $options
      */
     public function __construct(
         private array $options,
-    ) {}
+        ?string $rootDirectory = null,
+    ) {
+        // @phpstan-ignore assign.propertyType
+        $this->rootDirectory = $rootDirectory ?? getcwd();
+    }
 
     /**
      * @throws \InvalidArgumentException
@@ -48,8 +55,8 @@ final readonly class ConfigurationResolver
         }
 
         $supposedConfigFiles = [
-            getcwd() . '/.unused-class-hunter.php',
-            getcwd() . '/.unused-class-hunter.dist.php',
+            $this->rootDirectory . '/.unused-class-hunter.php',
+            $this->rootDirectory . '/.unused-class-hunter.dist.php',
         ];
 
         foreach ($supposedConfigFiles as $supposedConfigFile) {
@@ -72,7 +79,7 @@ final readonly class ConfigurationResolver
      */
     public function getReporter(): ReporterInterface
     {
-        $format = $this->options['format'] ?? 'txt';
+        $format = $this->options['format'] ?? (new TextReporter())->getFormat();
 
         if (!\is_string($format)) {
             throw new \InvalidArgumentException(\sprintf('Format must be a string, %s given', \gettype($format)));

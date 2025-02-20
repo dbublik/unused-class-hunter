@@ -11,7 +11,7 @@ final readonly class TextReporter implements ReporterInterface
     #[\Override]
     public function getFormat(): string
     {
-        return 'txt';
+        return 'text';
     }
 
     /**

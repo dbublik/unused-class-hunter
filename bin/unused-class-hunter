@@ -22,7 +22,7 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 (static function (): void {
     $autoloads = [
         __DIR__ . '/../../../autoload.php',
-        __DIR__ . '/../autoload.php',
+        __DIR__ . '/../vendor/autoload.php',
         getcwd() . '/vendor/autoload.php',
     ];
 

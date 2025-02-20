@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Cache;
 
+use DBublik\UnusedClassHunter\Config;
+use DBublik\UnusedClassHunter\Package;
 use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\FileNode;
@@ -20,7 +22,7 @@ final class Cache implements CacheInterface
     /** @var list<string> */
     private array $newFiles = [];
 
-    public function __construct(
+    private function __construct(
         private readonly string $cacheDir,
         private readonly Signature $signature,
     ) {
@@ -34,6 +36,21 @@ final class Cache implements CacheInterface
         foreach (array_diff($this->oldFiles, $this->newFiles) as $oldFile) {
             unlink($oldFile);
         }
+    }
+
+    public static function create(Config $config): self
+    {
+        return new self(
+            cacheDir: $config->getCacheDir(),
+            signature: new Signature(
+                phpVersion: PHP_VERSION,
+                packageVersion: Package::getVersion(),
+                config: [
+                    'isStrictMode' => $config->isStrictMode(),
+                    'bootstrapFiles' => $config->getBootstrapFiles(),
+                ],
+            ),
+        );
     }
 
     /**

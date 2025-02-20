@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter;
 
 use DBublik\UnusedClassHunter\Cache\Cache;
-use DBublik\UnusedClassHunter\Cache\Signature;
-use DBublik\UnusedClassHunter\Console\Application;
 use DBublik\UnusedClassHunter\Parser\ClassParser;
 use DBublik\UnusedClassHunter\Parser\FileParser;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
@@ -21,16 +19,8 @@ final readonly class UnusedClassFinder
         private Config $config,
     ) {
         $this->fileParser = new FileParser(
-            parser: ClassParser::create(
-                isStrict: $config->isStrictMode(),
-            ),
-            cache: new Cache(
-                cacheDir: $config->getCacheDir(),
-                signature: new Signature(
-                    phpVersion: PHP_VERSION,
-                    packageVersion: Application::VERSION,
-                ),
-            ),
+            parser: ClassParser::create($config->isStrictMode()),
+            cache: Cache::create($config),
         );
     }
 

@@ -24,7 +24,7 @@ final class CheckCommand extends Command
     protected function configure(): void
     {
         $this->addOption('config', null, InputOption::VALUE_REQUIRED, 'The path to a config file.');
-        $this->addOption('format', null, InputOption::VALUE_REQUIRED, 'To output results in other formats.', 'txt');
+        $this->addOption('format', null, InputOption::VALUE_REQUIRED, 'To output results in other formats.');
     }
 
     #[\Override]

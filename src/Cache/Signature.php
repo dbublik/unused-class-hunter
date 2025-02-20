@@ -11,6 +11,8 @@ final readonly class Signature implements \JsonSerializable
         public string $phpVersion,
         /** @var non-empty-string */
         public string $packageVersion,
+        /** @var non-empty-array<string, mixed> */
+        public array $config,
     ) {}
 
     /**
@@ -19,9 +21,10 @@ final readonly class Signature implements \JsonSerializable
     public static function fromData(array $data): ?self
     {
         if (
-            !isset($data['phpVersion'], $data['packageVersion'])
+            !isset($data['phpVersion'], $data['packageVersion'], $data['config'])
             || !\is_string($data['phpVersion']) || '' === $data['phpVersion']
             || !\is_string($data['packageVersion']) || '' === $data['packageVersion']
+            || !\is_array($data['config']) || [] === $data['config']
         ) {
             return null;
         }
@@ -29,6 +32,8 @@ final readonly class Signature implements \JsonSerializable
         return new self(
             phpVersion: $data['phpVersion'],
             packageVersion: $data['packageVersion'],
+            // @phpstan-ignore argument.type
+            config: $data['config'],
         );
     }
 
@@ -36,6 +41,7 @@ final readonly class Signature implements \JsonSerializable
      * @return array{
      *     phpVersion: non-empty-string,
      *     packageVersion: non-empty-string,
+     *     config: non-empty-array<string, mixed>,
      * }
      */
     #[\Override]
@@ -44,12 +50,14 @@ final readonly class Signature implements \JsonSerializable
         return [
             'phpVersion' => $this->phpVersion,
             'packageVersion' => $this->packageVersion,
+            'config' => $this->config,
         ];
     }
 
     public function equals(self $signature): bool
     {
         return $this->phpVersion === $signature->phpVersion
-            && $this->packageVersion === $signature->packageVersion;
+            && $this->packageVersion === $signature->packageVersion
+            && $this->config === $signature->config;
     }
 }
