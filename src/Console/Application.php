@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Console;
 
-use DBublik\UnusedClassHunter\Console\Command\CheckCommand;
+use DBublik\UnusedClassHunter\Console\Command\HuntCommand;
 use DBublik\UnusedClassHunter\Package;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\HelpCommand;
@@ -18,7 +18,7 @@ final class Application extends BaseApplication
     {
         parent::__construct(self::NAME, Package::VERSION);
 
-        $this->add(new CheckCommand());
+        $this->add(new HuntCommand());
     }
 
     #[\Override]

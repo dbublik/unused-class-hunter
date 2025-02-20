@@ -15,10 +15,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'check',
-    description: 'Check classes that are not used in any config and in the code.',
+    name: 'hunt',
+    description: 'Find classes that are not used in any config and in the code.',
 )]
-final class CheckCommand extends Command
+final class HuntCommand extends Command
 {
     #[\Override]
     protected function configure(): void

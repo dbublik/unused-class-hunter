@@ -13,7 +13,7 @@ composer require --dev dbublik/unused-class-hunter
 After installation, you can run the following command to start hunting:
 
 ```bash
-./vendor/bin/unused-class-hunter check
+./vendor/bin/unused-class-hunter hunt
 ```
 
 And that’s it! The Hunter will scan your entire codebase and find all unused classes.
@@ -43,7 +43,7 @@ return (new Config())
 If your config file has another path, you can specify this via the "config" option:
 
 ```bash
-./vendor/bin/unused-class-hunter check --config=example/directory/.unused-class-hunter.php
+./vendor/bin/unused-class-hunter hunt --config=example/directory/.unused-class-hunter.php
 ```
 
 ### Ignoring classes:

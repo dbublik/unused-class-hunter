@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter\Tests\Console;
 
 use DBublik\UnusedClassHunter\Console\Application;
-use DBublik\UnusedClassHunter\Console\Command\CheckCommand;
+use DBublik\UnusedClassHunter\Console\Command\HuntCommand;
 use DBublik\UnusedClassHunter\Package;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +33,7 @@ final class ApplicationTest extends TestCase
             [
                 HelpCommand::class,
                 ListCommand::class,
-                CheckCommand::class,
+                HuntCommand::class,
             ],
             array_values(
                 array_map(
