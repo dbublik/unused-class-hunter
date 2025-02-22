@@ -73,8 +73,8 @@ final class AutoconfigureTagAttributeFilterTest extends TestCase
      * @param list<class-string> $implements
      * @param list<AbstractFileNode> $fileNodes
      */
-    #[DataProvider('provideIsIgnoredParentHasAttribute')]
-    public function testIsIgnoredParentHasAttribute(
+    #[DataProvider('provideIsIgnoredHasParentAttribute')]
+    public function testIsIgnoredHasParentAttribute(
         bool $expectedIsIgnored,
         array $extends,
         array $implements,
@@ -106,7 +106,7 @@ final class AutoconfigureTagAttributeFilterTest extends TestCase
      *     }
      * >
      */
-    public static function provideIsIgnoredParentHasAttribute(): iterable
+    public static function provideIsIgnoredHasParentAttribute(): iterable
     {
         yield [
             'expectedIsIgnored' => false,
@@ -220,6 +220,7 @@ final class AutoconfigureTagAttributeFilterTest extends TestCase
                     usedClasses: [],
                     name: TestCase::class,
                     startLine: 1,
+                    implements: [Assert::class],
                 ),
                 new ClassNode(
                     file: 'reorderable.txt',

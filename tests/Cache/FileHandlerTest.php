@@ -71,16 +71,7 @@ final class FileHandlerTest extends TestCase
     {
         $file = sys_get_temp_dir() . '/' . uniqid('unused-class-hunter-test_', true);
         $fileHandler = new FileHandler($file);
-        $data = new class implements \JsonSerializable {
-            /**
-             * @return array{key: string, some_key: int, other_key: list<int|string>}
-             */
-            #[\Override]
-            public function jsonSerialize(): array
-            {
-                return ['key' => 'value', 'some_key' => 123, 'other_key' => [1, 6, '2']];
-            }
-        };
+        $data = $this->getDataJsonSerializable();
 
         try {
             $fileHandler->write($data);
@@ -93,5 +84,59 @@ final class FileHandlerTest extends TestCase
         } finally {
             unlink($file);
         }
+    }
+
+    public function testWritePermissionFailure(): void
+    {
+        $file = sys_get_temp_dir() . '/' . uniqid('unused-class-hunter-test_', true);
+        touch($file);
+
+        try {
+            chmod($file, 0o444);
+            $fileHandler = new FileHandler($file);
+            $data = $this->getDataJsonSerializable();
+
+            $this->expectExceptionObject(
+                new \RuntimeException(\sprintf('Failed to write to "%s".', $file)),
+            );
+
+            $fileHandler->write($data);
+        } finally {
+            unlink($file);
+        }
+    }
+
+    public function testWriteDirectoryPermissionFailure(): void
+    {
+        $directory = sys_get_temp_dir() . '/' . uniqid('unused-class-hunter-test_', true);
+
+        try {
+            mkdir($directory, 0o555);
+            $fileHandler = new FileHandler($directory . '/sub-directory/example.json');
+            $data = $this->getDataJsonSerializable();
+
+            $this->expectExceptionObject(
+                new \RuntimeException(\sprintf('Failed to create "%s".', $directory . '/sub-directory')),
+            );
+
+            $fileHandler->write($data);
+        } finally {
+            chmod($directory, 0o755);
+            rmdir($directory);
+        }
+    }
+
+    private function getDataJsonSerializable(): \JsonSerializable
+    {
+        return new class implements \JsonSerializable {
+            /**
+             * @return array{key: string, some_key: int, other_key: list<int|string>}
+             */
+            #[\Override]
+            public function jsonSerialize(): array
+            {
+                return ['key' => 'value', 'some_key' => 123, 'other_key' => [1, 6, '2']];
+            }
+        };
     }
 }

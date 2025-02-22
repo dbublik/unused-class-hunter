@@ -36,39 +36,47 @@ final class ReportFactoryTest extends TestCase
         );
     }
 
-    #[DataProvider('provideGetReporter')]
-    public function getReporter(string $format, ?ReporterInterface $expectedReporter): void
+    #[DataProvider('provideGetReporterException')]
+    public function testGetReporterException(string $format): void
     {
         $factory = new ReportFactory();
 
-        if (null === $expectedReporter) {
-            $this->expectExceptionObject(
-                new \InvalidArgumentException('Unsupported format.'),
-            );
-        }
+        $this->expectExceptionObject(
+            new \InvalidArgumentException('Unsupported format.'),
+        );
 
-        $reporter = $factory->getReporter($format);
-
-        if (null !== $expectedReporter) {
-            self::assertSame($expectedReporter::class, $reporter::class);
-        }
+        $factory->getReporter($format);
     }
 
     /**
-     * @return iterable<array{0: string, 1: null|ReporterInterface}>
+     * @return iterable<array{0: string}>
      */
-    public static function provideGetReporter(): iterable
+    public static function provideGetReporterException(): iterable
     {
         yield [
             '',
-            null,
         ];
 
         yield [
             'bad_format',
-            null,
         ];
+    }
 
+    #[DataProvider('provideGetReporter')]
+    public function testGetReporter(string $format, ReporterInterface $expectedReporter): void
+    {
+        $factory = new ReportFactory();
+
+        $reporter = $factory->getReporter($format);
+
+        self::assertSame($expectedReporter::class, $reporter::class);
+    }
+
+    /**
+     * @return iterable<array{0: string, 1: ReporterInterface}>
+     */
+    public static function provideGetReporter(): iterable
+    {
         yield [
             'text',
             new TextReporter(),

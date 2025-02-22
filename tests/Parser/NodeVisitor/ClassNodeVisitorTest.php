@@ -27,9 +27,12 @@ final class ClassNodeVisitorTest extends TestCase
         $parsedFile = new ParsedFile();
         $parsedFile->setClassName(self::class);
         $visitor = new ClassNodeVisitor(parsedFile: $parsedFile);
+        $node1 = new Node\Name(self::class);
+        $node2 = new Node\Name(TestCase::class);
 
-        $visitor->beforeTraverse([]);
+        $nodes = $visitor->beforeTraverse([$node1, $node2]);
 
+        self::assertSame([$node1, $node2], $nodes);
         self::assertNotSame($parsedFile, $newParsedFile = $visitor->getParsedFile());
         self::assertNull($newParsedFile->getClassName());
     }

@@ -1,0 +1,12 @@
+{
+    "file": "file.txt",
+    "usedClasses": [],
+    "class": {
+        "name": "name",
+        "startLine": 1,
+        "hasApiTag": false,
+        "extends": [],
+        "implements": [],
+        "attributes": []
+    }
+}

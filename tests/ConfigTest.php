@@ -36,9 +36,16 @@ final class ConfigTest extends TestCase
         self::assertSame(sys_get_temp_dir() . '/unused-class-hunter', $config->getCacheDir());
         self::assertFalse($config->isStrictMode());
         self::assertEmpty($config->getBootstrapFiles());
-        self::assertCount(2, $config->getFilters());
-        self::assertHasFilter($config, ClassFilter::class);
-        self::assertHasFilter($config, AttributeFilter::class);
+        self::assertSame(
+            [
+                ClassFilter::class,
+                AttributeFilter::class,
+            ],
+            array_map(
+                static fn (FilterInterface $filter): string => $filter::class,
+                $config->getFilters(),
+            )
+        );
         self::assertEmpty($config->getIgnoredClasses());
         self::assertEmpty($config->getIgnoredAttributes());
     }
@@ -126,8 +133,17 @@ final class ConfigTest extends TestCase
 
         $config->withFilters($customFilter);
 
-        self::assertCount(3, $config->getFilters());
-        self::assertHasFilter($config, $customFilter::class);
+        self::assertSame(
+            [
+                ClassFilter::class,
+                AttributeFilter::class,
+                $customFilter::class,
+            ],
+            array_map(
+                static fn (FilterInterface $filter): string => $filter::class,
+                $config->getFilters(),
+            )
+        );
     }
 
     public function testWithIgnoredClasses(): void
@@ -184,23 +200,6 @@ final class ConfigTest extends TestCase
         self::assertCount(2, $config->getFilters());
         self::assertSame(['FirstClass'], $config->getIgnoredClasses());
         self::assertSame(['FirstAttribute'], $config->getIgnoredAttributes());
-    }
-
-    /**
-     * @param class-string<FilterInterface> $filterClass
-     */
-    private static function assertHasFilter(Config $config, string $filterClass): void
-    {
-        $isExists = false;
-        foreach ($config->getFilters() as $filter) {
-            if ($filter instanceof $filterClass) {
-                $isExists = true;
-
-                break;
-            }
-        }
-
-        self::assertTrue($isExists);
     }
 
     private static function assertFinderPropertySame(Finder $finder, string $property, mixed $expected): void
