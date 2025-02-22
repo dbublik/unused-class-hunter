@@ -28,33 +28,27 @@ final readonly class FileHandler
             return null;
         }
 
-        if (false === $json = file_get_contents($this->file)) {
-            return null;
-        }
+        $json = @file_get_contents($this->file);
 
         try {
-            return (array) json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+            /** @var array<string, mixed> $content */
+            $content = json_decode((string) $json, true, flags: JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
             return null;
         }
+
+        return $content;
     }
 
     public function write(\JsonSerializable $value): void
     {
         $directory = \dirname($this->file);
 
-        if (
-            !file_exists($directory)
-            && !is_dir($directory) && !@mkdir($directory, 0o777, true) && !is_dir($directory)
-        ) {
+        if (!is_dir($directory) && !@mkdir($directory, recursive: true) && !is_dir($directory)) {
             throw new \RuntimeException(\sprintf('Failed to create "%s".', $directory));
         }
 
-        if (!touch($this->file)) {
-            throw new \RuntimeException(\sprintf('Failed to touch "%s".', $this->file));
-        }
-
-        if (false === file_put_contents($this->file, json_encode($value, JSON_THROW_ON_ERROR))) {
+        if (false === @file_put_contents($this->file, json_encode($value, JSON_THROW_ON_ERROR))) {
             throw new \RuntimeException(\sprintf('Failed to write to "%s".', $this->file));
         }
     }

@@ -59,22 +59,29 @@ final class Cache implements CacheInterface
     #[\Override]
     public function get(string $file): ?AbstractFileNode
     {
-        $cacheFile = $this->getFile($file);
-        $this->newFiles[] = $cacheFile->getName();
-
         if ($this->signatureWasUpdated) {
             return null;
         }
+
+        $cacheFile = $this->getFile($file);
 
         if (null === $data = $cacheFile->read()) {
             return null;
         }
 
         if (\array_key_exists('class', $data)) {
-            return ClassNode::fromData($data);
+            $node = ClassNode::fromData($data);
+        } else {
+            $node = FileNode::fromData($data);
         }
 
-        return FileNode::fromData($data);
+        if (null === $node) {
+            return null;
+        }
+
+        $this->newFiles[] = $cacheFile->getName();
+
+        return $node;
     }
 
     /**
@@ -83,7 +90,10 @@ final class Cache implements CacheInterface
     #[\Override]
     public function set(string $file, AbstractFileNode $fileNode): void
     {
-        $this->getFile($file)->write($fileNode);
+        $cacheFile = $this->getFile($file);
+        $cacheFile->write($fileNode);
+
+        $this->newFiles[] = $cacheFile->getName();
     }
 
     /**
@@ -120,9 +130,7 @@ final class Cache implements CacheInterface
 
         $files = [];
         foreach (Finder::create()->in($directory)->files() as $file) {
-            if (false !== $path = $file->getRealPath()) {
-                $files[] = $path;
-            }
+            $files[] = $file->getPathname();
         }
 
         return $files;

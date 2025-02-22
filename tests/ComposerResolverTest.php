@@ -59,6 +59,6 @@ final class ComposerResolverTest extends TestCase
         $version = $resolver->getVersion('nikic/php-parser');
 
         self::assertNotNull($version);
-        self::assertStringStartsWith('v5', $version);
+        self::assertMatchesRegularExpression('/^v5\.\d+\.\d+#\w+/', $version);
     }
 }

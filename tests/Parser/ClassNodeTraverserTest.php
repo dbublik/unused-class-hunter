@@ -36,5 +36,22 @@ final class ClassNodeTraverserTest extends TestCase
                 $visitors
             )
         );
+
+        /** @var ClassNodeVisitor $visitor */
+        $visitor = (new \ReflectionProperty(ClassNodeTraverser::class, 'visitor'))->getValue($traverser);
+        self::assertFalse(
+            (new \ReflectionProperty(ClassNodeVisitor::class, 'isStrict'))->getValue($visitor)
+        );
+    }
+
+    public function testConstructorStrict(): void
+    {
+        $traverser = new ClassNodeTraverser(isStrict: true);
+
+        /** @var ClassNodeVisitor $visitor */
+        $visitor = (new \ReflectionProperty(ClassNodeTraverser::class, 'visitor'))->getValue($traverser);
+        self::assertTrue(
+            (new \ReflectionProperty(ClassNodeVisitor::class, 'isStrict'))->getValue($visitor)
+        );
     }
 }

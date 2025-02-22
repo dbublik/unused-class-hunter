@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Tests\ValueObject;
 
+use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\TestCase;
  * @internal
  */
 #[CoversClass(ClassNode::class)]
+#[CoversClass(AbstractFileNode::class)]
 final class ClassNodeTest extends TestCase
 {
     public function testConstructor(): void

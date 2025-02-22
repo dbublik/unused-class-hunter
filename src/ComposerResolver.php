@@ -21,12 +21,11 @@ final readonly class ComposerResolver
             return null;
         }
 
-        if (false === $content = @file_get_contents($this->installedFile)) {
-            throw new \RuntimeException(\sprintf('Could not read content from "%s"', $this->installedFile));
-        }
+        $json = @file_get_contents($this->installedFile);
 
         try {
-            $installed = (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+            /** @var array<string, mixed> $installed */
+            $installed = json_decode((string) $json, true, flags: JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
             throw new \RuntimeException(\sprintf('Could not read content from "%s"', $this->installedFile));
         }

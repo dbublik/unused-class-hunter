@@ -29,13 +29,9 @@ final readonly class ClassParser
     public function parse(string $code): ParsedFile
     {
         try {
-            $nodes = $this->parser->parse($code);
+            $nodes = $this->parser->parse($code) ?? [];
         } catch (Error $error) {
             throw new \RuntimeException(\sprintf('Parse error: %s', $error->getMessage()), $error->getCode(), $error);
-        }
-
-        if (null === $nodes) {
-            throw new \RuntimeException(\sprintf('Parse error: %s', $code));
         }
 
         $this->traverser->traverse($nodes);

@@ -62,9 +62,7 @@ final class HuntCommand extends Command
         $unusedClasses = $finder->findClasses($io);
 
         if ($resolver->isDeletable()) {
-            foreach ($unusedClasses as $unusedClass) {
-                unlink($unusedClass->getFile());
-            }
+            $finder->deleteClasses(...$unusedClasses);
         }
 
         $report = $reporter->generate(

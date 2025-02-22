@@ -44,6 +44,13 @@ final readonly class UnusedClassFinder
         return $classes;
     }
 
+    public function deleteClasses(ClassNode ...$classes): void
+    {
+        foreach ($classes as $class) {
+            unlink($class->getFile());
+        }
+    }
+
     /**
      * @return list<non-empty-string>
      */

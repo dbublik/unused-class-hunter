@@ -56,15 +56,10 @@ final class ConfigurationResolverTest extends TestCase
         ];
     }
 
-    /**
-     * @param list<class-string> $ignoredClasses
-     */
-    #[DataProvider('provideGetConfig')]
-    public function testGetConfig(?string $rootDirectory, array $ignoredClasses): void
+    public function testGetConfig(): void
     {
         $resolver = new ConfigurationResolver(
-            options: [],
-            rootDirectory: __DIR__ . '/../Fixtures/Console/ConfigurationResolver',
+            options: ['config' => __DIR__ . '/../Fixtures/Console/ConfigurationResolver/.unused-class-hunter.dist.php'],
         );
 
         $config = $resolver->getConfig();
@@ -72,24 +67,37 @@ final class ConfigurationResolverTest extends TestCase
         self::assertSame([self::class], $config->getIgnoredClasses());
     }
 
+    #[DataProvider('provideGetConfigDefault')]
+    public function testGetConfigDefault(?string $rootDirectory, bool $isDefaultConfig): void
+    {
+        $resolver = new ConfigurationResolver(
+            options: [],
+            rootDirectory: $rootDirectory,
+        );
+
+        $config = $resolver->getConfig();
+
+        self::assertSame($isDefaultConfig, [self::class] !== $config->getIgnoredClasses());
+    }
+
     /**
-     * @return iterable<array{0: null|string, 1: list<class-string>}>
+     * @return iterable<array{0: null|string, 1: bool}>
      */
-    public static function provideGetConfig(): iterable
+    public static function provideGetConfigDefault(): iterable
     {
         yield [
             null,
-            [],
+            true,
         ];
 
         yield [
             __DIR__ . '/../Fixtures/Console/ConfigurationResolver/Bad/Root/Directory',
-            [],
+            true,
         ];
 
         yield [
             __DIR__ . '/../Fixtures/Console/ConfigurationResolver',
-            [self::class],
+            false,
         ];
     }
 
@@ -120,5 +128,50 @@ final class ConfigurationResolverTest extends TestCase
         $reporter = $resolver->getReporter();
 
         self::assertSame(TextReporter::class, $reporter::class);
+    }
+
+    #[DataProvider('provideIsDeletable')]
+    public function testIsDeletable(bool $expectedIsDeletable, mixed $deleteOption): void
+    {
+        $resolver = new ConfigurationResolver(['delete' => $deleteOption]);
+
+        $isDeletable = $resolver->isDeletable();
+
+        self::assertSame($expectedIsDeletable, $isDeletable);
+    }
+
+    /**
+     * @return iterable<array{0: bool, 1: mixed}>
+     */
+    public static function provideIsDeletable(): iterable
+    {
+        yield [
+            false,
+            [],
+        ];
+
+        yield [
+            false,
+            false,
+        ];
+
+        yield [
+            false,
+            1,
+        ];
+
+        yield [
+            true,
+            true,
+        ];
+    }
+
+    public function testIsDeletableDefault(): void
+    {
+        $resolver = new ConfigurationResolver([]);
+
+        $isDeletable = $resolver->isDeletable();
+
+        self::assertFalse($isDeletable);
     }
 }
