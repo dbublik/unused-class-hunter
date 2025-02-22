@@ -16,8 +16,8 @@ use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
 
@@ -72,7 +72,7 @@ final class UnusedClassFinderTest extends TestCase
             ->setCacheDir(sys_get_temp_dir() . '/' . uniqid('unused-class-hunter-test_', true))
             ->withFilters(new ApiTagFilter());
         $finder = new UnusedClassFinder($config);
-        $io = new SymfonyStyle(new ArgvInput(), new ConsoleOutput());
+        $io = new SymfonyStyle(new ArrayInput([]), new BufferedOutput());
 
         $unusedClasses = $finder->findClasses($io);
 
