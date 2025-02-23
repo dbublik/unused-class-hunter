@@ -1,0 +1,74 @@
+name: "Lint"
+
+on:
+    pull_request: ~
+    push:
+        branches: [ main ]
+
+permissions:
+    contents: read
+
+jobs:
+    composer:
+        name: "Composer"
+        runs-on: ubuntu-latest
+        steps:
+            -   name: "Checkout code"
+                uses: actions/checkout@v4
+
+            -   name: "Setup PHP"
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.3
+
+            -   name: "Install dependencies"
+                uses: ramsey/composer-install@v3
+                with:
+                    composer-options: --optimize-autoloader
+
+            -   name: "Lint Composer config"
+                run: composer self-validate
+
+            -   name: "Check if autoloader is valid"
+                run: composer self-dump-autoload
+
+            -   name: "Lint config style"
+                run: composer self-normalize
+
+            -   name: "Check if any dependencies are compromised"
+                run: composer self-audit
+
+    static-analysis:
+        name: ${{ matrix.actions.name }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                actions:
+                    -   name: "PHP-CS-Fixer"
+                        run: composer cs:check -- --ansi --format=checkstyle
+
+                    -   name: "PHPStan"
+                        run: composer phpstan -- --ansi
+
+                    -   name: "Unused class hunter"
+                        run: composer hunter -- --ansi
+
+                    -   name: "Rector"
+                        run: composer rector -- --ansi
+
+        steps:
+            -   name: "Checkout code"
+                uses: actions/checkout@v4
+
+            -   name: "Setup PHP"
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.3
+
+            -   name: "Install dependencies"
+                uses: ramsey/composer-install@v3
+                with:
+                    composer-options: --optimize-autoloader
+
+            -   name: "Run ${{ matrix.actions.name }}"
+                run: ${{ matrix.actions.run }}

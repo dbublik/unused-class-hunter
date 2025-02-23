@@ -47,11 +47,6 @@
         "hunter": "@php bin/unused-class-hunter hunt",
         "infection": "@php vendor/bin/infection --threads=10 --show-mutations",
         "install-tools": "@composer --working-dir=tools install",
-        "normalize": [
-            "@composer normalize --working-dir=tools ../composer.json",
-            "@composer normalize --working-dir=tools composer.json"
-        ],
-        "normalize:check": "@normalize --dry-run",
         "phpstan": "@php tools/vendor/bin/phpstan analyse",
         "quality-assurance": [
             "@install-tools --quiet",
@@ -61,10 +56,25 @@
         ],
         "rector": "@php tools/vendor/bin/rector process",
         "rector:check": "@rector --dry-run",
-        "self-check": [
-            "@composer dump-autoload --dry-run --optimize --strict-psr",
-            "@normalize:check"
+        "self-audit": [
+            "@composer audit",
+            "@composer audit --working-dir=tools"
         ],
+        "self-check": [
+            "@self-audit",
+            "@self-dump-autoload",
+            "@self-normalize",
+            "@self-validate"
+        ],
+        "self-dump-autoload": [
+            "@composer dump-autoload --dry-run --optimize --strict-psr",
+            "@composer dump-autoload --dry-run --optimize --strict-psr --working-dir=tools"
+        ],
+        "self-normalize": [
+            "@composer normalize ../composer.json --dry-run --working-dir=tools",
+            "@composer normalize composer.json --dry-run --working-dir=tools"
+        ],
+        "self-validate": "@composer validate --strict",
         "static-analysis": [
             "@cs:check",
             "@phpstan",
