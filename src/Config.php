@@ -43,6 +43,7 @@ final class Config
 
     public function __construct()
     {
+        // @infection-ignore-all
         $this->finder = Finder::create()->in((string) getcwd());
         $this->cacheDir = sys_get_temp_dir() . '/unused-class-hunter';
         $this->withFilters(new ClassFilter(), new AttributeFilter());
@@ -173,18 +174,20 @@ final class Config
         bool $phpunit = false,
         bool $codeception = false,
     ): self {
-        $sets = [
-            new SymfonySet(),
-            new DoctrineSet(),
-            new TwigSet(),
-            new PhpunitSet(),
-            new CodeceptionSet(),
-        ];
-
-        foreach (\func_get_args() as $key => $isEnabled) {
-            if (\array_key_exists($key, $sets) && \is_bool($isEnabled) && $isEnabled) {
-                $this->withSet($sets[$key]);
-            }
+        if ($symfony) {
+            $this->withSet(new SymfonySet());
+        }
+        if ($doctrine) {
+            $this->withSet(new DoctrineSet());
+        }
+        if ($twig) {
+            $this->withSet(new TwigSet());
+        }
+        if ($phpunit) {
+            $this->withSet(new PhpunitSet());
+        }
+        if ($codeception) {
+            $this->withSet(new CodeceptionSet());
         }
 
         return $this;

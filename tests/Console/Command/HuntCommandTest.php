@@ -75,7 +75,7 @@ final class HuntCommandTest extends TestCase
         );
 
         self::assertSame(Command::FAILURE, $exitCode);
-        self::assertStringContainsString('[ERROR] Cannot read config file', $commandTester->getErrorOutput());
+        self::assertStringContainsString('[ERROR] The config file does not exist', $commandTester->getErrorOutput());
     }
 
     public function testExecuteInvalidFormat(): void
@@ -98,13 +98,56 @@ final class HuntCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $configFile = __DIR__ . '/../../Fixtures/Console/Command/HuntCommand/config-empty-directory.php';
 
-        $exitCode = $commandTester->execute(['--config' => $configFile, '--delete' => true]);
+        $exitCode = $commandTester->execute(['--config' => $configFile]);
 
         self::assertSame(Command::SUCCESS, $exitCode);
         self::assertStringContainsString(
-            'Success! The hunt is over — no unused classes found.',
+            "\nSuccess! The hunt is over — no unused classes found.",
+            $commandTester->getDisplay()
+        );
+        self::assertMatchesRegularExpression(
+            '/Duration \d{1,2}\.\d{3} seconds, \d{1,3}\.\d{2} MB memory used/',
             $commandTester->getDisplay()
         );
         self::assertSame(['bootstrap-file-was-included'], $_SERVER['argv'] ?? []);
+    }
+
+    public function testExecuteDecorated(): void
+    {
+        $command = new HuntCommand();
+        $commandTester = new CommandTester($command);
+        $configFile = __DIR__ . '/../../Fixtures/Console/Command/HuntCommand/config-empty-directory.php';
+
+        $exitCode = $commandTester->execute(['--config' => $configFile], ['decorated' => true]);
+
+        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertStringContainsString(
+            '[32mSuccess! The hunt is over — no unused classes found.',
+            $commandTester->getDisplay()
+        );
+    }
+
+    public function testExecuteWithDeletion(): void
+    {
+        $command = new HuntCommand();
+        $commandTester = new CommandTester($command);
+        $configFile = __DIR__ . '/../../Fixtures/Console/Command/HuntCommand/config-empty-directory.php';
+        $file = __DIR__ . '/../../Fixtures/Console/Command/HuntCommand/empty-directory/'
+            . uniqid('unused-class-hunter-test_', true) . '.php';
+        copy(__FILE__, $file);
+
+        try {
+            $exitCode = $commandTester->execute(['--config' => $configFile, '--delete' => true]);
+            self::assertSame(Command::SUCCESS, $exitCode);
+            self::assertStringContainsString(
+                'The hunt is over! 1 unused classes deleted.',
+                $commandTester->getDisplay()
+            );
+            self::assertFileDoesNotExist($file);
+        } finally {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
     }
 }

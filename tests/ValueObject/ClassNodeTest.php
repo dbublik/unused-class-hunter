@@ -406,7 +406,7 @@ final class ClassNodeTest extends TestCase
                 'usedClasses' => [],
                 'class' => [
                     'name' => 'name',
-                    'startLine' => 1,
+                    'startLine' => 0,
                     'hasApiTag' => false,
                     'extends' => [],
                     'implements' => [],

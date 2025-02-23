@@ -85,6 +85,19 @@ final class ClassNodeVisitorTest extends TestCase
             new ParsedFile(),
         ];
 
+        yield 'not traversed if no name is found' => [
+            (static function () use ($builder): Node\Stmt\ClassLike {
+                $class = $builder->class('ClassName');
+
+                $node = $class->getNode();
+                $node->namespacedName = new Node\Name(self::class);
+                $node->name = null;
+
+                return $node;
+            })(),
+            new ParsedFile(),
+        ];
+
         yield 'there are api tag and start line - 1' => [
             (static function () use ($builder): Node\Stmt\ClassLike {
                 $class = $builder->class('ClassName');
@@ -460,5 +473,29 @@ final class ClassNodeVisitorTest extends TestCase
             ]),
             self::class,
         ];
+    }
+
+    public function testEnterNodeNameStrict(): void
+    {
+        $visitor = new ClassNodeVisitor(isStrict: true);
+        $node = new Node\Name(self::class, [
+            'parent' => (new BuilderFactory())->classConstFetch(self::class, 'name'),
+        ]);
+
+        $result = $visitor->enterNode($node);
+
+        self::assertNull($result);
+        self::assertSame([self::class], $visitor->getParsedFile()->getUsedClasses());
+    }
+
+    public function testEnterNodeOther(): void
+    {
+        $visitor = new ClassNodeVisitor();
+        $node = (new BuilderFactory())->classConstFetch(self::class, 'name');
+
+        $result = $visitor->enterNode($node);
+
+        self::assertNull($result);
+        self::assertEmpty($visitor->getParsedFile()->getUsedClasses());
     }
 }

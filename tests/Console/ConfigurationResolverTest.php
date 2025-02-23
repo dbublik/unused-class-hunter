@@ -46,14 +46,34 @@ final class ConfigurationResolverTest extends TestCase
         ];
 
         yield [
-            $configFile = __DIR__ . '/../Fixtures/Not/Found',
-            \sprintf('Cannot read config file "%s".', $configFile),
+            __DIR__ . '/../Fixtures/Not/Found',
+            'The config file does not exist.',
         ];
 
         yield [
             $configFile = __DIR__ . '/../Fixtures/Console/ConfigurationResolver/bad-config-file.php',
             \sprintf('The config file: "%s" does not return a "%s" instance.', $configFile, Config::class),
         ];
+    }
+
+    public function testGetConfigExceptionNotReadable(): void
+    {
+        $config = sys_get_temp_dir() . '/' . uniqid('unused-class-hunter-test_', true);
+        touch($config);
+
+        try {
+            chmod($config, 0o00);
+            $resolver = new ConfigurationResolver(['config' => $config]);
+
+            $this->expectExceptionObject(
+                new \InvalidArgumentException(\sprintf('Cannot read config file "%s".', $config))
+            );
+
+            $resolver->getConfig();
+        } finally {
+            chmod($config, 0o666);
+            unlink($config);
+        }
     }
 
     public function testGetConfig(): void

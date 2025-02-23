@@ -13,8 +13,5 @@ interface CacheInterface
      */
     public function get(string $file): ?AbstractFileNode;
 
-    /**
-     * @param non-empty-string $file
-     */
-    public function set(string $file, AbstractFileNode $fileNode): void;
+    public function set(AbstractFileNode $fileNode): void;
 }

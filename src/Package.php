@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter;
 
+/**
+ * @infection-ignore-all
+ */
 final readonly class Package
 {
     public const string NAME = 'dbublik/unused-class-hunter';

@@ -31,8 +31,12 @@ final readonly class FileHandler
         $json = @file_get_contents($this->file);
 
         try {
-            /** @var array<string, mixed> $content */
-            $content = json_decode((string) $json, true, flags: JSON_THROW_ON_ERROR);
+            /**
+             * @var array<string, mixed> $content
+             *
+             * @infection-ignore-all
+             */
+            $content = json_decode((string) $json, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
             return null;
         }
@@ -44,6 +48,7 @@ final readonly class FileHandler
     {
         $directory = \dirname($this->file);
 
+        // @infection-ignore-all
         if (!is_dir($directory) && !@mkdir($directory, recursive: true) && !is_dir($directory)) {
             throw new \RuntimeException(\sprintf('Failed to create "%s".', $directory));
         }

@@ -25,7 +25,7 @@ final readonly class TextReporter implements ReporterInterface
         if ([] === $summary->unusedClasses) {
             $result = 'Success! The hunt is over — no unused classes found.';
 
-            $output .= $summary->isDecoratedOutput ? \sprintf('<info>%s</info>', $result) : $result;
+            $output = $summary->isDecoratedOutput ? \sprintf('<info>%s</info>', $result) : $result;
         } else {
             foreach ($summary->unusedClasses as $unusedClass) {
                 $file = $this->getRelativeFile($unusedClass);

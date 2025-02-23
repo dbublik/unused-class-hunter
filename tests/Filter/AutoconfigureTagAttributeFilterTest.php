@@ -13,6 +13,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Reorderable;
+use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -127,6 +128,28 @@ final class AutoconfigureTagAttributeFilterTest extends TestCase
             'extends' => [TestCase::class],
             'implements' => [],
             'fileNodes' => [
+                new ClassNode(
+                    file: 'test.txt',
+                    usedClasses: [],
+                    name: TestCase::class,
+                    startLine: 1,
+                    attributes: [self::getAutoconfigureTagAttribute()],
+                ),
+            ],
+        ];
+
+        yield [
+            'expectedIsIgnored' => true,
+            'extends' => [Assert::class, TestCase::class],
+            'implements' => [],
+            'fileNodes' => [
+                new ClassNode(
+                    file: 'test.txt',
+                    usedClasses: [],
+                    name: Test::class,
+                    startLine: 1,
+                    attributes: [],
+                ),
                 new ClassNode(
                     file: 'test.txt',
                     usedClasses: [],
