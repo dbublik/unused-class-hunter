@@ -30,7 +30,7 @@ jobs:
                 run: composer tests -- --colors=always --coverage-clover=var/log/clover.xml
 
             -   name: "Upload coverage results to Coveralls"
-                run: php vendor/bin/php-coveralls --coverage_clover=var/log/clover.xml -v
+                run: php vendor/bin/php-coveralls --coverage_clover=var/log/clover.xml --json_path=var/log/coveralls-upload.json -v
                 env:
                     COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
