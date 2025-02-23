@@ -40,7 +40,7 @@ final class FileParserTest extends TestCase
         $file = __DIR__ . '/../Fixtures/Parser/FileParser/file-nodes.php';
         $parser = new FileParser(
             parser: ClassParser::create(),
-            cache: $this->getNullCache(),
+            cache: $cache = $this->getNullCache(),
         );
 
         $fileNode = $parser->parse($file);
@@ -48,6 +48,7 @@ final class FileParserTest extends TestCase
         self::assertInstanceOf(FileNode::class, $fileNode);
         self::assertSame($file, $fileNode->getFile());
         self::assertSame([self::class, FileNode::class], $fileNode->getUsedClasses());
+        self::assertNotNull($cache->get($file));
     }
 
     public function testParseFileStrict(): void
@@ -89,35 +90,30 @@ final class FileParserTest extends TestCase
         $file = __DIR__ . '/../Fixtures/Parser/FileParser/ClassNodes.php';
         $parser = new FileParser(
             parser: ClassParser::create(isStrict: true),
-            cache: $this->getNullCache(),
+            cache: $cache = $this->getNullCache(),
         );
 
         $fileNode = $parser->parse($file);
 
         self::assertInstanceOf(ClassNode::class, $fileNode);
         self::assertSame(['Attribute', 'stdClass'], $fileNode->getUsedClasses());
+        self::assertNotNull($cache->get($file));
     }
 
     public function testParseFileFromCache(): void
     {
         $parser = new FileParser(
             parser: ClassParser::create(),
-            cache: new class implements CacheInterface {
-                #[\Override]
-                public function get(string $file): AbstractFileNode
-                {
-                    return new FileNode(
-                        file: 'file-path',
-                        usedClasses: [FileParserTest::class],
-                    );
-                }
-
-                #[\Override]
-                public function set(string $file, AbstractFileNode $fileNode): void {}
-            },
+            cache: $cache = $this->getNullCache(),
+        );
+        $cache->set(
+            new FileNode(
+                file: 'file-path',
+                usedClasses: [self::class],
+            )
         );
 
-        $fileNode = $parser->parse('...');
+        $fileNode = $parser->parse('file-path');
 
         self::assertInstanceOf(FileNode::class, $fileNode);
         self::assertSame('file-path', $fileNode->getFile());
@@ -128,28 +124,22 @@ final class FileParserTest extends TestCase
     {
         $parser = new FileParser(
             parser: ClassParser::create(),
-            cache: new class implements CacheInterface {
-                #[\Override]
-                public function get(string $file): AbstractFileNode
-                {
-                    return new ClassNode(
-                        file: 'class-path',
-                        usedClasses: [\Attribute::class, TestCase::class],
-                        name: FileParserTest::class,
-                        startLine: 11,
-                        hasApiTag: false,
-                        extends: [TestCase::class],
-                        implements: [],
-                        attributes: [\Attribute::class],
-                    );
-                }
-
-                #[\Override]
-                public function set(string $file, AbstractFileNode $fileNode): void {}
-            },
+            cache: $cache = $this->getNullCache(),
+        );
+        $cache->set(
+            new ClassNode(
+                file: 'class-path',
+                usedClasses: [\Attribute::class, TestCase::class],
+                name: self::class,
+                startLine: 11,
+                hasApiTag: false,
+                extends: [TestCase::class],
+                implements: [],
+                attributes: [\Attribute::class],
+            )
         );
 
-        $classNode = $parser->parse('...');
+        $classNode = $parser->parse('class-path');
 
         self::assertInstanceOf(ClassNode::class, $classNode);
         self::assertSame('class-path', $classNode->getFile());
@@ -165,14 +155,20 @@ final class FileParserTest extends TestCase
     private function getNullCache(): CacheInterface
     {
         return new class implements CacheInterface {
+            /** @var array<string, AbstractFileNode> */
+            private array $files = [];
+
             #[\Override]
             public function get(string $file): ?AbstractFileNode
             {
-                return null;
+                return $this->files[$file] ?? null;
             }
 
             #[\Override]
-            public function set(string $file, AbstractFileNode $fileNode): void {}
+            public function set(AbstractFileNode $fileNode): void
+            {
+                $this->files[$fileNode->getFile()] = $fileNode;
+            }
         };
     }
 }

@@ -27,7 +27,7 @@ final readonly class FileParser
 
         $fileNode = $this->parseFile($file);
 
-        $this->cache->set($file, $fileNode);
+        $this->cache->set($fileNode);
 
         return $fileNode;
     }

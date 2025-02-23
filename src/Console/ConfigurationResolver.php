@@ -37,7 +37,10 @@ final readonly class ConfigurationResolver
                     \sprintf('Config file must be a string, %s given', \gettype($configFile))
                 );
             }
-            if (!file_exists($configFile) || !is_readable($configFile)) {
+            if (!file_exists($configFile)) {
+                throw new \InvalidArgumentException('The config file does not exist.');
+            }
+            if (!is_readable($configFile)) {
                 throw new \InvalidArgumentException(
                     \sprintf('Cannot read config file "%s".', $configFile)
                 );

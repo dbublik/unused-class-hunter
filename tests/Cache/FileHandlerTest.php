@@ -67,6 +67,24 @@ final class FileHandlerTest extends TestCase
         ];
     }
 
+    public function testReadPermissionFailure(): void
+    {
+        $file = sys_get_temp_dir() . '/' . uniqid('unused-class-hunter-test_', true);
+        touch($file);
+
+        try {
+            chmod($file, 0o000);
+            $handler = new FileHandler($file);
+
+            $data = $handler->read();
+
+            self::assertNull($data);
+        } finally {
+            chmod($file, 0o755);
+            unlink($file);
+        }
+    }
+
     public function testWrite(): void
     {
         $file = sys_get_temp_dir() . '/' . uniqid('unused-class-hunter-test_', true);

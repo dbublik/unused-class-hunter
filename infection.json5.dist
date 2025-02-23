@@ -4,14 +4,14 @@
         "directories": [
             "bin",
             "src"
-        ],
+        ]
     },
     "logs": {
         "text": "var/log/infection.log"
     },
     "tmpDir": "var/cache/infection",
-    "minMsi": 92,
-    "minCoveredMsi": 92,
+    "minMsi": 100,
+    "minCoveredMsi": 100,
     "mutators": {
         "@default": true
     }

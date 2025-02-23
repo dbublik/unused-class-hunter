@@ -51,6 +51,10 @@ final class CacheTest extends TestCase
 
         $cache = Cache::create($config);
 
+        /** @var FileHandler $cacheDir */
+        $cacheDir = (new \ReflectionProperty(Cache::class, 'cacheDir'))->getValue($cache);
+        self::assertSame($this->classesDir, $cacheDir);
+
         /** @var FileHandler $rootCacheFile */
         $rootCacheFile = (new \ReflectionProperty(Cache::class, 'rootCacheFile'))->getValue($cache);
         self::assertSame($this->rootCacheFile, $rootCacheFile->getName());
@@ -234,9 +238,9 @@ final class CacheTest extends TestCase
         $config = (new Config())->setCacheDir($this->cacheDir);
         $cache = Cache::create($config);
         $file = $this->getClassFilename();
-        $node = new FileNode(self::class, []);
+        $node = new FileNode(__FILE__, []);
 
-        $cache->set(__FILE__, $node);
+        $cache->set($node);
 
         self::assertFileExists($file);
         self::assertSame(

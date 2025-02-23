@@ -6,7 +6,9 @@ namespace DBublik\UnusedClassHunter\Tests;
 
 use DBublik\UnusedClassHunter\Config;
 use DBublik\UnusedClassHunter\Filter\AttributeFilter;
+use DBublik\UnusedClassHunter\Filter\AutoconfigureTagAttributeFilter;
 use DBublik\UnusedClassHunter\Filter\ClassFilter;
+use DBublik\UnusedClassHunter\Filter\CodeceptionTestClassFilter;
 use DBublik\UnusedClassHunter\Filter\FilterInterface;
 use DBublik\UnusedClassHunter\Sets\SetInterface;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
@@ -170,15 +172,55 @@ final class ConfigTest extends TestCase
         self::assertSame(array_unique($attributes), $attributes);
     }
 
-    public function testWithSets(): void
+    public function testWithSetsSymfony(): void
+    {
+        $config = new Config();
+
+        $config->withSets(symfony: true);
+
+        self::assertCount(3, $filters = $config->getFilters());
+        self::assertInstanceOf(AutoconfigureTagAttributeFilter::class, $filters[2]);
+        self::assertCount(3, $config->getIgnoredClasses());
+        self::assertCount(2, $config->getIgnoredAttributes());
+    }
+
+    public function testWithSetsDoctrine(): void
+    {
+        $config = new Config();
+
+        $config->withSets(doctrine: true);
+
+        self::assertSame(
+            ['Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener'],
+            $config->getIgnoredAttributes()
+        );
+    }
+
+    public function testWithSetsTwig(): void
+    {
+        $config = new Config();
+
+        $config->withSets(twig: true);
+
+        self::assertSame(['Twig\Extension\ExtensionInterface'], $config->getIgnoredClasses());
+    }
+
+    public function testWithSetsPhpunit(): void
     {
         $config = new Config();
 
         $config->withSets(phpunit: true);
 
-        self::assertCount(2, $config->getFilters());
         self::assertSame(['PHPUnit\Framework\TestCase'], $config->getIgnoredClasses());
-        self::assertEmpty($config->getIgnoredAttributes());
+    }
+
+    public function testWithSetsCodeception(): void
+    {
+        $config = new Config();
+
+        $config->withSets(codeception: true);
+
+        self::assertInstanceOf(CodeceptionTestClassFilter::class, $config->getFilters()[2] ?? null);
     }
 
     public function testWithCustomSet(): void

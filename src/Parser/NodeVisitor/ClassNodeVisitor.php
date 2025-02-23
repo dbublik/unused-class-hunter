@@ -76,7 +76,7 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
         // @phpstan-ignore argument.type
         $this->parsedFile->setClassName($namespace->toString());
 
-        if (0 < $startLine = $node->getStartLine()) {
+        if (-1 !== $startLine = $node->getStartLine()) {
             $this->parsedFile->setClassStartLine($startLine);
         }
 

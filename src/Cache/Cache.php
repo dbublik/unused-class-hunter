@@ -13,6 +13,7 @@ use Symfony\Component\Finder\Finder;
 
 final class Cache implements CacheInterface
 {
+    private readonly string $cacheDir;
     private readonly FileHandler $rootCacheFile;
     private bool $signatureWasUpdated = true;
 
@@ -23,10 +24,11 @@ final class Cache implements CacheInterface
     private array $newFiles = [];
 
     private function __construct(
-        private readonly string $cacheDir,
+        string $cacheDir,
         private readonly Signature $signature,
     ) {
-        $this->rootCacheFile = new FileHandler($this->cacheDir . '/.hunter.cache');
+        $this->cacheDir = $cacheDir . '/classes';
+        $this->rootCacheFile = new FileHandler($cacheDir . '/.hunter.cache');
         $this->getRootCache();
         $this->oldFiles = $this->getOldFiles();
     }
@@ -84,13 +86,10 @@ final class Cache implements CacheInterface
         return $node;
     }
 
-    /**
-     * @param non-empty-string $file
-     */
     #[\Override]
-    public function set(string $file, AbstractFileNode $fileNode): void
+    public function set(AbstractFileNode $fileNode): void
     {
-        $cacheFile = $this->getFile($file);
+        $cacheFile = $this->getFile($fileNode->getFile());
         $cacheFile->write($fileNode);
 
         $this->newFiles[] = $cacheFile->getName();
@@ -101,7 +100,7 @@ final class Cache implements CacheInterface
      */
     private function getFile(string $file): FileHandler
     {
-        return new FileHandler($this->cacheDir . '/classes/' . hash_file('sha256', $file));
+        return new FileHandler($this->cacheDir . '/' . hash_file('sha256', $file));
     }
 
     private function getRootCache(): void
@@ -124,7 +123,7 @@ final class Cache implements CacheInterface
      */
     private function getOldFiles(): array
     {
-        if (!file_exists($directory = $this->cacheDir . '/classes')) {
+        if (!file_exists($directory = $this->cacheDir)) {
             return [];
         }
 

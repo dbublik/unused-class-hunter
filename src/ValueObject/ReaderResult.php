@@ -9,7 +9,7 @@ use DBublik\UnusedClassHunter\Config;
 final readonly class ReaderResult
 {
     /**
-     * @var list<class-string>
+     * @var array<class-string>
      */
     private array $usedClasses;
 
@@ -36,10 +36,7 @@ final readonly class ReaderResult
             }
         }
 
-        $usedClasses = array_unique(array_merge(...$usedClasses));
-        sort($usedClasses);
-        $this->usedClasses = $usedClasses;
-
+        $this->usedClasses = array_merge(...$usedClasses);
         $this->classes = $classes;
     }
 

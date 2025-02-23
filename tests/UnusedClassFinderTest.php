@@ -10,6 +10,7 @@ use DBublik\UnusedClassHunter\Parser\ClassNodeTraverser;
 use DBublik\UnusedClassHunter\Parser\ClassParser;
 use DBublik\UnusedClassHunter\Parser\FileParser;
 use DBublik\UnusedClassHunter\Parser\NodeVisitor\ClassNodeVisitor;
+use DBublik\UnusedClassHunter\Tests\Fixtures\UnusedClassFinder\Example2TestClass;
 use DBublik\UnusedClassHunter\Tests\Fixtures\UnusedClassFinder\ExampleTestClass;
 use DBublik\UnusedClassHunter\UnusedClassFinder;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
@@ -68,20 +69,32 @@ final class UnusedClassFinderTest extends TestCase
     public function testFindClasses(): void
     {
         $config = (new Config())
-            ->setFinder(Finder::create()->in(__DIR__ . '/Fixtures/UnusedClassFinder'))
+            ->setFinder(
+                Finder::create()
+                    ->in(__DIR__ . '/Fixtures/UnusedClassFinder')
+                    ->append([__DIR__ . '/Fixtures/Not/Found/file.php'])
+            )
             ->setCacheDir(sys_get_temp_dir() . '/' . uniqid('unused-class-hunter-test_', true))
             ->withFilters(new ApiTagFilter());
         $finder = new UnusedClassFinder($config);
-        $io = new SymfonyStyle(new ArrayInput([]), new BufferedOutput());
+        $io = new SymfonyStyle(new ArrayInput([]), $output = new BufferedOutput());
 
         $unusedClasses = $finder->findClasses($io);
 
         self::assertSame(
-            [ExampleTestClass::class],
+            [Example2TestClass::class, ExampleTestClass::class],
             array_map(
                 static fn (ClassNode $node): string => $node->getName(),
                 $unusedClasses
             )
+        );
+        self::assertSame(
+            '
+ 1/3 [▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░]  33%
+ 3/3 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
+
+',
+            $output->fetch()
         );
     }
 
