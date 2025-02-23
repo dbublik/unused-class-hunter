@@ -47,6 +47,6 @@ jobs:
                     composer-options: --optimize-autoloader
 
             -   name: "Run mutation tests"
-                run: composer infection
+                run: composer infection -- --ansi
                 env:
                     INFECTION_DASHBOARD_API_KEY: ${{ secrets.INFECTION_DASHBOARD_API_KEY }}

@@ -75,7 +75,12 @@ final class HuntCommand extends Command
             )
         );
 
-        $output->isDecorated() ? $output->write($report) : $output->write($report, false, OutputInterface::OUTPUT_RAW);
+        if ($output->isDecorated()) {
+            $output->write($report);
+        } else {
+            // @infection-ignore-all
+            $output->write($report, false, OutputInterface::OUTPUT_RAW);
+        }
 
         return Command::SUCCESS;
     }
