@@ -3,8 +3,10 @@
 Detects unused classes in your PHP codebase.
 
 [![PHP Version Requirement](https://img.shields.io/packagist/dependency-v/dbublik/unused-class-hunter/php)](https://packagist.org/packages/dbublik/unused-class-hunter)
-[![Tests](https://github.com/dbublik/unused-class-hunter/actions/workflows/tests.yaml/badge.svg)](https://github.com/dbublik/unused-class-hunter/actions/workflows/tests.yaml)
 [![License](https://poser.pugx.org/dbublik/unused-class-hunter/license)](https://choosealicense.com/licenses/mit/)
+[![Tests](https://github.com/dbublik/unused-class-hunter/actions/workflows/tests.yaml/badge.svg)](https://github.com/dbublik/unused-class-hunter/actions/workflows/tests.yaml)
+[![Lint](https://github.com/dbublik/unused-class-hunter/actions/workflows/lint.yaml/badge.svg)](https://github.com/dbublik/unused-class-hunter/actions/workflows/lint.yaml)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fdbublik%2Funused-class-hunter%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/dbublik/unused-class-hunter/main)
 
 ## Installation
 
