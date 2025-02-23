@@ -16,8 +16,8 @@
         "symfony/finder": "^7.2"
     },
     "require-dev": {
-        "infection/infection": "^0.29.12",
-        "php-coveralls/php-coveralls": "^0.1.0",
+        "infection/infection": "^0.29",
+        "php-coveralls/php-coveralls": "^2.7",
         "phpunit/phpunit": "^12.0"
     },
     "autoload": {
