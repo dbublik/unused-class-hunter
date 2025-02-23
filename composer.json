@@ -17,6 +17,7 @@
     },
     "require-dev": {
         "infection/infection": "^0.29.12",
+        "php-coveralls/php-coveralls": "^0.1.0",
         "phpunit/phpunit": "^12.0"
     },
     "autoload": {

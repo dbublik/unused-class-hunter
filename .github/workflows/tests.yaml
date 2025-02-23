@@ -27,7 +27,12 @@ jobs:
                     composer-options: --optimize-autoloader
 
             -   name: "Run tests"
-                run: composer tests -- --colors=always
+                run: composer tests -- --colors=always --coverage-clover=var/logs/clover.xml
+
+            -   name: "Upload coverage results to Coveralls"
+                run: php vendor/bin/php-coveralls --verbose
+                env:
+                    COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
     infection:
         name: Infection
