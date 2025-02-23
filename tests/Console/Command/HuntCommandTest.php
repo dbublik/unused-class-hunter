@@ -100,7 +100,7 @@ final class HuntCommandTest extends TestCase
 
         $exitCode = $commandTester->execute(['--config' => $configFile]);
 
-        // self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertSame(Command::SUCCESS, $exitCode);
         self::assertStringContainsString(
             "\nSuccess! The hunt is over — no unused classes found.",
             $commandTester->getDisplay()
@@ -120,7 +120,7 @@ final class HuntCommandTest extends TestCase
 
         $exitCode = $commandTester->execute(['--config' => $configFile], ['decorated' => true]);
 
-        // self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertSame(Command::SUCCESS, $exitCode);
         self::assertStringContainsString(
             '[32mSuccess! The hunt is over — no unused classes found.',
             $commandTester->getDisplay()
@@ -138,7 +138,7 @@ final class HuntCommandTest extends TestCase
 
         try {
             $exitCode = $commandTester->execute(['--config' => $configFile, '--delete' => true]);
-            // self::assertSame(Command::SUCCESS, $exitCode);
+            self::assertSame(Command::SUCCESS, $exitCode);
             self::assertStringContainsString(
                 'The hunt is over! 1 unused classes deleted.',
                 $commandTester->getDisplay()
