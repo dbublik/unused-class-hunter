@@ -45,16 +45,16 @@ jobs:
             matrix:
                 actions:
                     -   name: "PHP-CS-Fixer"
-                        run: composer cs:check -- --format=checkstyle
+                        run: composer cs:check -- --ansi --format=checkstyle
 
                     -   name: "PHPStan"
-                        run: composer phpstan
+                        run: composer phpstan -- --ansi
 
                     -   name: "Unused class hunter"
-                        run: composer hunter
+                        run: composer hunter -- --ansi
 
                     -   name: "Rector"
-                        run: composer rector
+                        run: composer rector -- --ansi
 
         steps:
             -   name: "Checkout code"

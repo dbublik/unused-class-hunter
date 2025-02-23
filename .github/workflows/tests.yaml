@@ -27,4 +27,4 @@ jobs:
                     composer-options: --optimize-autoloader
 
             -   name: "Run tests"
-                run: composer tests
+                run: composer tests -- --colors=always
