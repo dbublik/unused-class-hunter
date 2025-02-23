@@ -45,7 +45,7 @@
         "cs": "@php tools/vendor/bin/php-cs-fixer fix",
         "cs:check": "@php tools/vendor/bin/php-cs-fixer check --verbose --diff",
         "hunter": "@php bin/unused-class-hunter hunt",
-        "infection": "@php vendor/bin/infection --threads=10 --show-mutations",
+        "infection": "@php vendor/bin/infection --threads=max --show-mutations",
         "install-tools": "@composer --working-dir=tools install",
         "phpstan": "@php tools/vendor/bin/phpstan analyse",
         "quality-assurance": [
