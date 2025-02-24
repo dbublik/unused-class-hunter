@@ -6,38 +6,49 @@ namespace DBublik\UnusedClassHunter\ValueObject;
 
 use DBublik\UnusedClassHunter\Config;
 
-final readonly class ReaderResult
+final class ReaderResult
 {
     /**
-     * @var array<class-string>
+     * @var array<class-string, list<AbstractFileNode>>
      */
-    private array $usedClasses;
+    private array $usedFileMap = [];
 
     /**
      * @var array<class-string, ClassNode>
      */
-    private array $classes;
+    private array $usedClasses = [];
+
+    /**
+     * @var array<class-string, ClassNode>
+     */
+    private array $unusedClasses = [];
 
     /**
      * @param list<AbstractFileNode> $fileNodes
      */
     public function __construct(
-        private Config $config,
+        private readonly Config $config,
         array $fileNodes,
     ) {
-        $usedClasses = [];
         $classes = [];
 
         foreach ($fileNodes as $fileNode) {
-            $usedClasses[] = $fileNode->getUsedClasses();
+            foreach ($fileNode->getUsedClasses() as $usedClass) {
+                $this->usedFileMap[$usedClass][] = $fileNode;
+            }
 
             if ($fileNode instanceof ClassNode) {
                 $classes[$fileNode->getName()] = $fileNode;
             }
         }
 
-        $this->usedClasses = array_merge(...$usedClasses);
-        $this->classes = $classes;
+        foreach ($classes as $name => $class) {
+            if (isset($this->usedFileMap[$name])) {
+                $this->usedClasses[$name] = $class;
+            } else {
+                $this->unusedClasses[$name] = $class;
+            }
+        }
     }
 
     public function getConfig(): Config
@@ -46,24 +57,28 @@ final readonly class ReaderResult
     }
 
     /**
+     * @return array<class-string, ClassNode>
+     */
+    public function getUnusedClasses(): array
+    {
+        return $this->unusedClasses;
+    }
+
+    /**
+     * @param class-string $name
+     *
+     * @return list<AbstractFileNode>
+     */
+    public function getUsedFilesByName(string $name): array
+    {
+        return $this->usedFileMap[$name] ?? [];
+    }
+
+    /**
      * @param class-string $name
      */
     public function getClassByName(string $name): ?ClassNode
     {
-        return $this->classes[$name] ?? null;
-    }
-
-    /**
-     * @return \Generator<ClassNode>
-     */
-    public function getUnusedClasses(): \Generator
-    {
-        $usedClasses = array_flip($this->usedClasses);
-
-        foreach ($this->classes as $name => $class) {
-            if (!isset($usedClasses[$name])) {
-                yield $class;
-            }
-        }
+        return $this->usedClasses[$name] ?? $this->unusedClasses[$name] ?? null;
     }
 }

@@ -30,12 +30,10 @@ final readonly class UnusedClassFinder
     public function findClasses(SymfonyStyle $io): array
     {
         $files = $this->getFiles();
-
         $readerResult = $this->readFiles($io, $files);
-        $unusedClasses = $readerResult->getUnusedClasses();
 
         $classes = [];
-        foreach ($unusedClasses as $class) {
+        foreach ($readerResult->getUnusedClasses() as $class) {
             if (!$this->isSkipped($class, $readerResult)) {
                 $classes[] = $class;
             }
