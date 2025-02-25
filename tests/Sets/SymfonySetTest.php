@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter\Tests\Sets;
 
 use DBublik\UnusedClassHunter\Filter\AutoconfigureTagAttributeFilter;
+use DBublik\UnusedClassHunter\PreFilter\ConstraintPreFilter;
 use DBublik\UnusedClassHunter\Sets\SymfonySet;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -20,6 +21,7 @@ final class SymfonySetTest extends AbstractSetTestCase
 
         self::assertSet(
             $set,
+            preFilters: [new ConstraintPreFilter()],
             filters: [new AutoconfigureTagAttributeFilter()],
             ignoredClasses: [
                 'Symfony\Component\EventDispatcher\EventSubscriberInterface',

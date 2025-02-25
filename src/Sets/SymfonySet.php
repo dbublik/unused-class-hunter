@@ -6,12 +6,14 @@ namespace DBublik\UnusedClassHunter\Sets;
 
 use DBublik\UnusedClassHunter\Config;
 use DBublik\UnusedClassHunter\Filter\AutoconfigureTagAttributeFilter;
+use DBublik\UnusedClassHunter\PreFilter\ConstraintPreFilter;
 
 final readonly class SymfonySet implements SetInterface
 {
     #[\Override]
     public function __invoke(Config $config): void
     {
+        $config->withPreFilters(new ConstraintPreFilter());
         $config->withFilters(new AutoconfigureTagAttributeFilter());
         $config->withIgnoredClasses(
             'Symfony\Component\EventDispatcher\EventSubscriberInterface',

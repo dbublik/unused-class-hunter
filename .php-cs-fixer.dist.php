@@ -12,11 +12,14 @@ return (new Config())
     ->setFinder(
         Finder::create()
             ->in(__DIR__)
-            ->exclude(['var'])
             ->append([
                 __DIR__ . '/bin/unused-class-hunter',
                 __DIR__ . '/.php-cs-fixer.dist.php',
                 __DIR__ . '/.unused-class-hunter.dist.php',
+            ])
+            ->exclude(['var'])
+            ->notPath([
+                'tests/Fixtures/PreFilter/ConstraintPreFilterTest/ExampleConstraint.php',
             ])
     )
     ->setRiskyAllowed(true)
