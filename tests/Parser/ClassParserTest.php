@@ -27,7 +27,10 @@ final class ClassParserTest extends TestCase
         self::assertInstanceOf(Lexer::class, $lexer);
         $phpVersion = (new \ReflectionProperty($parser, 'phpVersion'))->getValue($parser);
         self::assertInstanceOf(PhpVersion::class, $phpVersion);
-        self::assertSame(80300, $phpVersion->id);
+        self::assertSame(
+            PHP_MAJOR_VERSION * 10000 + PHP_MINOR_VERSION * 100,
+            $phpVersion->id
+        );
     }
 
     public function testParseSyntaxException(): void

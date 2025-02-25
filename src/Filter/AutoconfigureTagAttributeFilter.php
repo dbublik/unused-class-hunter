@@ -9,8 +9,8 @@ use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 
 final readonly class AutoconfigureTagAttributeFilter implements FilterInterface
 {
-    private const string AUTOCONFIGURE_TAG_CLASS = '\Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag';
-    private const int MAX_DEEP_DEFAULT = 3;
+    private const AUTOCONFIGURE_TAG_CLASS = '\Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag';
+    private const MAX_DEEP_DEFAULT = 3;
 
     public function __construct(
         private int $maxDeep = self::MAX_DEEP_DEFAULT,

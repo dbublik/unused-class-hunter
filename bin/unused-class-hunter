@@ -9,7 +9,7 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 // check environment requirements
 (static function (): void {
-    if (\PHP_VERSION_ID < 80300) {
+    if (\PHP_VERSION_ID < 80200) {
         fwrite(STDERR, "PHP needs to be a minimum version of PHP 8.2.0.\n");
         fwrite(STDERR, 'Current PHP version: ' . \PHP_VERSION . ".\n");
         fwrite(STDERR, "Update PHP version to unblock execution.\n");
