@@ -9,7 +9,7 @@ namespace Symfony\Component\Validator {
     }
 }
 
-namespace DBublik\UnusedClassHunter\Tests\Fixtures\PreFilter\ConstraintPreFilterTest {
+namespace DBublik\UnusedClassHunter\Tests\Fixtures\PreFilter\ConstraintPreFilter {
 
     use Symfony\Component\Validator\Constraint;
 

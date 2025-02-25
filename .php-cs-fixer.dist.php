@@ -19,7 +19,8 @@ return (new Config())
             ])
             ->exclude(['var'])
             ->notPath([
-                'tests/Fixtures/PreFilter/ConstraintPreFilterTest/ExampleConstraint.php',
+                'tests/Fixtures/PreFilter/ConstraintPreFilter/ExampleConstraint.php',
+                'tests/Fixtures/PreFilter/ServiceEntityRepositoryPreFilter/ExampleRepository.php',
             ])
     )
     ->setRiskyAllowed(true)

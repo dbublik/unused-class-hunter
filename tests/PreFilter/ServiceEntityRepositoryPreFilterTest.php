@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter\Tests\PreFilter;
 
 use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\PreFilter\ConstraintPreFilter;
-use DBublik\UnusedClassHunter\Tests\Fixtures\PreFilter\ConstraintPreFilter\ExampleConstraint;
+use DBublik\UnusedClassHunter\PreFilter\ServiceEntityRepositoryPreFilter;
+use DBublik\UnusedClassHunter\Tests\Fixtures\PreFilter\ServiceEntityRepositoryPreFilter\ExampleRepository;
 use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\FileNode;
@@ -18,12 +18,12 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  */
-#[CoversClass(ConstraintPreFilter::class)]
-final class ConstraintPreFilterTest extends TestCase
+#[CoversClass(ServiceEntityRepositoryPreFilter::class)]
+final class ServiceEntityRepositoryPreFilterTest extends TestCase
 {
-    public function testIsUnusedNotConstraint(): void
+    public function testIsUnusedNotRepository(): void
     {
-        $preFilter = new ConstraintPreFilter();
+        $preFilter = new ServiceEntityRepositoryPreFilter();
         $classNode = new ClassNode(
             file: 'file.txt',
             usedClasses: [],
@@ -43,16 +43,16 @@ final class ConstraintPreFilterTest extends TestCase
     #[DataProvider('provideIsUnusedFalse')]
     public function testIsUnusedFalse(array $fileNodes): void
     {
-        $preFilter = new ConstraintPreFilter();
-        $constraintNode = new ClassNode(
+        $preFilter = new ServiceEntityRepositoryPreFilter();
+        $classNode = new ClassNode(
             file: 'file.txt',
             usedClasses: [],
-            name: ExampleConstraint::class,
+            name: ExampleRepository::class,
             startLine: 1,
         );
         $readerResult = new ReaderResult(new Config(), $fileNodes);
 
-        $isUnused = $preFilter->isUnused($constraintNode, $readerResult);
+        $isUnused = $preFilter->isUnused($classNode, $readerResult);
 
         self::assertFalse($isUnused);
     }
@@ -70,7 +70,7 @@ final class ConstraintPreFilterTest extends TestCase
             [
                 new FileNode(
                     file: 'file.txt',
-                    usedClasses: [ExampleConstraint::class],
+                    usedClasses: [ExampleRepository::class],
                 ),
             ],
         ];
@@ -79,7 +79,7 @@ final class ConstraintPreFilterTest extends TestCase
             [
                 new ClassNode(
                     file: 'file.txt',
-                    usedClasses: [],
+                    usedClasses: [ExampleRepository::class],
                     name: self::class,
                     startLine: 1,
                 ),
@@ -88,15 +88,15 @@ final class ConstraintPreFilterTest extends TestCase
 
         yield [
             [
-                new ClassNode(
-                    file: 'file.txt',
-                    usedClasses: [ExampleConstraint::class],
-                    name: self::class,
-                    startLine: 1,
-                ),
                 new FileNode(
                     file: 'file.txt',
-                    usedClasses: [ExampleConstraint::class],
+                    usedClasses: [ExampleRepository::class],
+                ),
+                new ClassNode(
+                    file: 'file.txt',
+                    usedClasses: [ExampleRepository::class],
+                    name: self::class,
+                    startLine: 1,
                 ),
             ],
         ];
@@ -104,23 +104,24 @@ final class ConstraintPreFilterTest extends TestCase
 
     public function testIsUnused(): void
     {
-        $preFilter = new ConstraintPreFilter();
-        $constraintNode = new ClassNode(
+        $preFilter = new ServiceEntityRepositoryPreFilter();
+        $repositoryNode = new ClassNode(
             file: 'file.txt',
             usedClasses: [],
-            name: ExampleConstraint::class,
+            name: ExampleRepository::class,
             startLine: 1,
         );
-        $validatorNode = new ClassNode(
+        $entityNode = new ClassNode(
             file: 'file.txt',
-            usedClasses: [ExampleConstraint::class],
-            // @phpstan-ignore argument.type
-            name: ExampleConstraint::class . 'Validator',
+            usedClasses: [ExampleRepository::class],
+            name: self::class,
             startLine: 1,
+            // @phpstan-ignore argument.type
+            attributes: ['Doctrine\ORM\Mapping\Table'],
         );
-        $readerResult = new ReaderResult(new Config(), [$validatorNode]);
+        $readerResult = new ReaderResult(new Config(), [$entityNode]);
 
-        $isUnused = $preFilter->isUnused($constraintNode, $readerResult);
+        $isUnused = $preFilter->isUnused($repositoryNode, $readerResult);
 
         self::assertTrue($isUnused);
     }
