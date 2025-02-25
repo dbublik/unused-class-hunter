@@ -10,6 +10,7 @@ use DBublik\UnusedClassHunter\Filter\AutoconfigureTagAttributeFilter;
 use DBublik\UnusedClassHunter\Filter\ClassFilter;
 use DBublik\UnusedClassHunter\Filter\CodeceptionTestClassFilter;
 use DBublik\UnusedClassHunter\Filter\FilterInterface;
+use DBublik\UnusedClassHunter\PreFilter\PreFilterInterface;
 use DBublik\UnusedClassHunter\Sets\SetInterface;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
@@ -38,6 +39,7 @@ final class ConfigTest extends TestCase
         self::assertSame(sys_get_temp_dir() . '/unused-class-hunter', $config->getCacheDir());
         self::assertFalse($config->isStrictMode());
         self::assertEmpty($config->getBootstrapFiles());
+        self::assertEmpty($config->getPreFilters());
         self::assertSame(
             [
                 ClassFilter::class,
@@ -120,6 +122,28 @@ final class ConfigTest extends TestCase
         );
 
         $config->withBootstrapFiles($file);
+    }
+
+    public function testWithPreFilters(): void
+    {
+        $config = new Config();
+        $customPreFilter = new class implements PreFilterInterface {
+            #[\Override]
+            public function isUnused(ClassNode $class, ReaderResult $reader): bool
+            {
+                return false;
+            }
+        };
+
+        $config->withPreFilters($customPreFilter);
+
+        self::assertSame(
+            [$customPreFilter::class],
+            array_map(
+                static fn (PreFilterInterface $preFilter): string => $preFilter::class,
+                $config->getPreFilters(),
+            )
+        );
     }
 
     public function testWithFilters(): void

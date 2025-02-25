@@ -32,9 +32,15 @@ final readonly class UnusedClassFinder
         $files = $this->getFiles();
         $readerResult = $this->readFiles($io, $files);
 
+        foreach ($readerResult->getUsedClasses() as $class) {
+            if ($this->isUnused($class, $readerResult)) {
+                $readerResult->unusedClass($class);
+            }
+        }
+
         $classes = [];
         foreach ($readerResult->getUnusedClasses() as $class) {
-            if (!$this->isSkipped($class, $readerResult)) {
+            if (!$this->isIgnored($class, $readerResult)) {
                 $classes[] = $class;
             }
         }
@@ -84,7 +90,18 @@ final readonly class UnusedClassFinder
         return new ReaderResult($this->config, $fileNodes);
     }
 
-    private function isSkipped(ClassNode $class, ReaderResult $reader): bool
+    private function isUnused(ClassNode $class, ReaderResult $reader): bool
+    {
+        foreach ($this->config->getPreFilters() as $preFilter) {
+            if ($preFilter->isUnused($class, $reader)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isIgnored(ClassNode $class, ReaderResult $reader): bool
     {
         foreach ($this->config->getFilters() as $filter) {
             if ($filter->isIgnored($class, $reader)) {
