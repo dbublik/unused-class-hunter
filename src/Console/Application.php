@@ -12,7 +12,7 @@ use Symfony\Component\Console\Command\ListCommand;
 
 final class Application extends BaseApplication
 {
-    public const string NAME = 'Unused class hunter';
+    public const NAME = 'Unused class hunter';
 
     public function __construct()
     {

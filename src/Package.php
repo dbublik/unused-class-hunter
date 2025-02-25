@@ -9,8 +9,8 @@ namespace DBublik\UnusedClassHunter;
  */
 final readonly class Package
 {
-    public const string NAME = 'dbublik/unused-class-hunter';
-    public const string VERSION = '1.0.2';
+    public const NAME = 'dbublik/unused-class-hunter';
+    public const VERSION = '1.0.2';
 
     /**
      * @return non-empty-string

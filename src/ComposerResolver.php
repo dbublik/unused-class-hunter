@@ -6,7 +6,7 @@ namespace DBublik\UnusedClassHunter;
 
 final readonly class ComposerResolver
 {
-    private const string INSTALLED_FILE_DEFAULT = __DIR__ . '/../../../composer/installed.json';
+    private const INSTALLED_FILE_DEFAULT = __DIR__ . '/../../../composer/installed.json';
 
     public function __construct(
         private string $installedFile = self::INSTALLED_FILE_DEFAULT,

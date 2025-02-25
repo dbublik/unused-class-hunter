@@ -226,7 +226,7 @@ final class ConfigTest extends TestCase
     public function testWithCustomSet(): void
     {
         $config = new Config();
-        $customSet = new readonly class implements SetInterface {
+        $customSet = new class implements SetInterface {
             #[\Override]
             public function __invoke(Config $config): void
             {
