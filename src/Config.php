@@ -7,6 +7,7 @@ namespace DBublik\UnusedClassHunter;
 use DBublik\UnusedClassHunter\Filter\AttributeFilter;
 use DBublik\UnusedClassHunter\Filter\ClassFilter;
 use DBublik\UnusedClassHunter\Filter\FilterInterface;
+use DBublik\UnusedClassHunter\PreFilter\PreFilterInterface;
 use DBublik\UnusedClassHunter\Sets\CodeceptionSet;
 use DBublik\UnusedClassHunter\Sets\DoctrineSet;
 use DBublik\UnusedClassHunter\Sets\PhpunitSet;
@@ -25,6 +26,11 @@ final class Config
      * @var list<string>
      */
     private array $bootstrapFiles = [];
+
+    /**
+     * @var array<class-string<PreFilterInterface>, PreFilterInterface>
+     */
+    private array $preFilters = [];
 
     /**
      * @var array<class-string<FilterInterface>, FilterInterface>
@@ -105,6 +111,23 @@ final class Config
             }
 
             $this->bootstrapFiles[] = $bootstrapFile;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return list<PreFilterInterface>
+     */
+    public function getPreFilters(): array
+    {
+        return array_values($this->preFilters);
+    }
+
+    public function withPreFilters(PreFilterInterface ...$preFilters): self
+    {
+        foreach ($preFilters as $preFilter) {
+            $this->preFilters[$preFilter::class] = $preFilter;
         }
 
         return $this;

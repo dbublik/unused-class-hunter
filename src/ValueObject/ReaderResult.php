@@ -59,9 +59,23 @@ final class ReaderResult
     /**
      * @return array<class-string, ClassNode>
      */
+    public function getUsedClasses(): array
+    {
+        return $this->usedClasses;
+    }
+
+    /**
+     * @return array<class-string, ClassNode>
+     */
     public function getUnusedClasses(): array
     {
         return $this->unusedClasses;
+    }
+
+    public function unusedClass(ClassNode $class): void
+    {
+        unset($this->usedClasses[$class->getName()]);
+        $this->unusedClasses[$class->getName()] = $class;
     }
 
     /**

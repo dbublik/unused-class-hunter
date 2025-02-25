@@ -28,9 +28,29 @@ final class ReaderResultTest extends TestCase
         $readerResult = new ReaderResult($config, $fileNodes);
 
         self::assertSame($config, $readerResult->getConfig());
+        self::assertEmpty($readerResult->getUsedClasses());
         self::assertEmpty($readerResult->getUnusedClasses());
         self::assertEmpty($readerResult->getUsedFilesByName(self::class));
         self::assertNull($readerResult->getClassByName(self::class));
+    }
+
+    public function testGetUsedClasses(): void
+    {
+        $config = new Config();
+        $fileNodes = [
+            new FileNode('file1.txt', [Assert::class]),
+            new FileNode('file2.txt', [Assert::class, Reorderable::class]),
+            new ClassNode('class1.txt', [Config::class], self::class, 1),
+            new ClassNode('class2.txt', [ReaderResult::class], TestCase::class, 5),
+            new ClassNode('class3.txt', [ReaderResult::class], Reorderable::class, 3),
+        ];
+
+        $readerResult = new ReaderResult($config, $fileNodes);
+
+        self::assertSame(
+            [Reorderable::class],
+            array_keys($readerResult->getUsedClasses())
+        );
     }
 
     public function testGetUnusedClasses(): void
@@ -51,6 +71,28 @@ final class ReaderResultTest extends TestCase
                 self::class,
                 TestCase::class,
             ],
+            array_keys($readerResult->getUnusedClasses())
+        );
+    }
+
+    public function testUnusedClass(): void
+    {
+        $config = new Config();
+        $fileNode = new FileNode('file.txt', [self::class]);
+        $classNode = new ClassNode('class.txt', [], self::class, 1);
+        $readerResult = new ReaderResult($config, [$fileNode, $classNode]);
+
+        $readerResult->unusedClass($classNode);
+
+        self::assertSame(
+            ['file.txt'],
+            array_map(
+                static fn (AbstractFileNode $fileNode): string => $fileNode->getFile(),
+                $readerResult->getUsedFilesByName(self::class),
+            )
+        );
+        self::assertSame(
+            [self::class],
             array_keys($readerResult->getUnusedClasses())
         );
     }
