@@ -338,6 +338,6 @@ final class AutoconfigureTagAttributeFilterTest extends TestCase
     private static function getAutoconfigureTagAttribute(): string
     {
         // @phpstan-ignore return.type
-        return '\Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag';
+        return 'Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag';
     }
 }
