@@ -9,5 +9,5 @@ namespace DBublik\UnusedClassHunter\Tests\Fixtures\UnusedClassFinder;
  */
 final readonly class ExampleIgnoredTestClass
 {
-    public const USED_CLASS = ExampleUsedTestClass::class;
+    public const USED_CLASS = ExampleMentionedTestClass::class;
 }
