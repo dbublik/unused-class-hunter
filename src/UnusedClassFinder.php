@@ -45,6 +45,8 @@ final readonly class UnusedClassFinder
             }
         }
 
+        sort($classes);
+
         return $classes;
     }
 

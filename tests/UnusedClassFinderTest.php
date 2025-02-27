@@ -12,8 +12,8 @@ use DBublik\UnusedClassHunter\Parser\FileParser;
 use DBublik\UnusedClassHunter\Parser\NodeVisitor\ClassNodeVisitor;
 use DBublik\UnusedClassHunter\PreFilter\PreFilterInterface;
 use DBublik\UnusedClassHunter\Tests\Fixtures\UnusedClassFinder\Example2TestClass;
+use DBublik\UnusedClassHunter\Tests\Fixtures\UnusedClassFinder\ExampleMentionedTestClass;
 use DBublik\UnusedClassHunter\Tests\Fixtures\UnusedClassFinder\ExampleTestClass;
-use DBublik\UnusedClassHunter\Tests\Fixtures\UnusedClassFinder\ExampleUsedTestClass;
 use DBublik\UnusedClassHunter\UnusedClassFinder;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
@@ -115,7 +115,7 @@ final class UnusedClassFinderTest extends TestCase
                     #[\Override]
                     public function isUnused(ClassNode $class, ReaderResult $reader): bool
                     {
-                        return ExampleUsedTestClass::class === $class->getName();
+                        return ExampleMentionedTestClass::class === $class->getName();
                     }
                 }
             )
@@ -126,7 +126,7 @@ final class UnusedClassFinderTest extends TestCase
         $unusedClasses = $finder->findClasses($io);
 
         self::assertSame(
-            [Example2TestClass::class, ExampleTestClass::class, ExampleUsedTestClass::class],
+            [Example2TestClass::class, ExampleMentionedTestClass::class, ExampleTestClass::class],
             array_map(
                 static fn (ClassNode $node): string => $node->getName(),
                 $unusedClasses
