@@ -48,13 +48,13 @@ jobs:
                         run: composer cs:check -- --ansi --format=checkstyle
 
                     -   name: "PHPStan"
-                        run: composer phpstan -- --ansi
+                        run: composer phpstan -- --ansi --error-format=github
 
                     -   name: "Unused class hunter"
-                        run: composer hunter -- --ansi
+                        run: composer hunter -- --ansi --format=github
 
                     -   name: "Rector"
-                        run: composer rector -- --ansi
+                        run: composer rector -- --ansi --output-format=github
 
         steps:
             -   name: "Checkout code"
