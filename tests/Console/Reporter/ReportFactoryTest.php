@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Tests\Console\Reporter;
 
+use DBublik\UnusedClassHunter\Console\Reporter\GithubReporter;
 use DBublik\UnusedClassHunter\Console\Reporter\GitlabReporter;
 use DBublik\UnusedClassHunter\Console\Reporter\ReporterInterface;
 use DBublik\UnusedClassHunter\Console\Reporter\ReportFactory;
@@ -28,6 +29,7 @@ final class ReportFactoryTest extends TestCase
             [
                 TextReporter::class,
                 GitlabReporter::class,
+                GithubReporter::class,
             ],
             array_map(
                 static fn (ReporterInterface $reporter): string => $reporter::class,
@@ -89,6 +91,11 @@ final class ReportFactoryTest extends TestCase
         yield [
             'gitlab',
             new GitlabReporter(),
+        ];
+
+        yield [
+            'github',
+            new GithubReporter(),
         ];
     }
 }
