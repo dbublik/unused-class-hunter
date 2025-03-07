@@ -7,6 +7,7 @@ namespace DBublik\UnusedClassHunter\Console;
 use DBublik\UnusedClassHunter\Console\Command\HuntCommand;
 use DBublik\UnusedClassHunter\Package;
 use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Command\ListCommand;
 
@@ -21,6 +22,9 @@ final class Application extends BaseApplication
         $this->add(new HuntCommand());
     }
 
+    /**
+     * @return list<Command>
+     */
     #[\Override]
     protected function getDefaultCommands(): array
     {

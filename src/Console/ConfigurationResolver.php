@@ -11,10 +11,14 @@ use DBublik\UnusedClassHunter\Console\Reporter\TextReporter;
 
 final readonly class ConfigurationResolver
 {
+    /**
+     * @var non-empty-string
+     */
     private string $rootDirectory;
 
     /**
      * @param array<string, mixed> $options
+     * @param null|non-empty-string $rootDirectory
      */
     public function __construct(
         private array $options,
@@ -84,7 +88,7 @@ final readonly class ConfigurationResolver
     {
         $format = $this->options['format'] ?? (new TextReporter())->getFormat();
 
-        if (!\is_string($format)) {
+        if (!\is_string($format) || '' === $format) {
             throw new \InvalidArgumentException(\sprintf('Format must be a string, %s given', \gettype($format)));
         }
 

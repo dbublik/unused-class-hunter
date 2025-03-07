@@ -6,6 +6,9 @@ namespace DBublik\UnusedClassHunter\Console\Reporter;
 
 interface ReporterInterface
 {
+    /**
+     * @return non-empty-string
+     */
     public function getFormat(): string;
 
     /**

@@ -19,11 +19,15 @@ use Symfony\Component\Finder\Finder;
 final class Config
 {
     private Finder $finder;
+
+    /**
+     * @var non-empty-string
+     */
     private string $cacheDir;
     private bool $isStrictMode = false;
 
     /**
-     * @var list<string>
+     * @var list<non-empty-string>
      */
     private array $bootstrapFiles = [];
 
@@ -71,11 +75,17 @@ final class Config
         return $this;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getCacheDir(): string
     {
         return $this->cacheDir;
     }
 
+    /**
+     * @param non-empty-string $cacheDir
+     */
     public function setCacheDir(string $cacheDir): self
     {
         $this->cacheDir = $cacheDir;
@@ -96,13 +106,18 @@ final class Config
     }
 
     /**
-     * @return list<string>
+     * @return list<non-empty-string>
      */
     public function getBootstrapFiles(): array
     {
         return $this->bootstrapFiles;
     }
 
+    /**
+     * @param non-empty-string ...$bootstrapFiles
+     *
+     * @throws \InvalidArgumentException
+     */
     public function withBootstrapFiles(string ...$bootstrapFiles): self
     {
         foreach ($bootstrapFiles as $bootstrapFile) {

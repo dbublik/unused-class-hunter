@@ -39,5 +39,7 @@ return (new Config())
         'modernize_strpos' => true,
         'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
         'phpdoc_align' => ['align' => 'left'],
+        'phpdoc_array_type' => true,
+        'phpdoc_list_type' => true,
         'phpdoc_param_order' => true,
     ]);

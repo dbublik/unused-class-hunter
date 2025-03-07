@@ -8,6 +8,9 @@ use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 
 final readonly class TextReporter implements ReporterInterface
 {
+    /**
+     * @return non-empty-string
+     */
     #[\Override]
     public function getFormat(): string
     {
@@ -60,6 +63,9 @@ final readonly class TextReporter implements ReporterInterface
         return str_replace(getcwd() . \DIRECTORY_SEPARATOR, '', $unusedClass->getFile());
     }
 
+    /**
+     * @return non-empty-string
+     */
     private function getServiceInformation(ReportSummary $summary): string
     {
         return \sprintf(

@@ -8,6 +8,9 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 
 final readonly class GitlabReporter implements ReporterInterface
 {
+    /**
+     * @return non-empty-string
+     */
     #[\Override]
     public function getFormat(): string
     {

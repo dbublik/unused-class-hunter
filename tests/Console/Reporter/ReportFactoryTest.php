@@ -22,7 +22,7 @@ final class ReportFactoryTest extends TestCase
     {
         $factory = new ReportFactory();
 
-        /** @var ReporterInterface[] $reporters */
+        /** @var list<ReporterInterface> $reporters */
         $reporters = (new \ReflectionProperty(ReportFactory::class, 'reporters'))->getValue($factory);
         self::assertSame(
             [
@@ -45,6 +45,7 @@ final class ReportFactoryTest extends TestCase
             new \InvalidArgumentException('Unsupported format.'),
         );
 
+        // @phpstan-ignore argument.type
         $factory->getReporter($format);
     }
 
@@ -62,6 +63,9 @@ final class ReportFactoryTest extends TestCase
         ];
     }
 
+    /**
+     * @param non-empty-string $format
+     */
     #[DataProvider('provideGetReporter')]
     public function testGetReporter(string $format, ReporterInterface $expectedReporter): void
     {
@@ -73,7 +77,7 @@ final class ReportFactoryTest extends TestCase
     }
 
     /**
-     * @return iterable<array{0: string, 1: ReporterInterface}>
+     * @return iterable<array{0: non-empty-string, 1: ReporterInterface}>
      */
     public static function provideGetReporter(): iterable
     {
