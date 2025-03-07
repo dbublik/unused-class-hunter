@@ -68,6 +68,17 @@ final class GitlabReporterTest extends TestCase
         ];
 
         yield [
+            new ReportSummary(
+                unusedClasses: [new ClassNode(__FILE__, [], self::class, 1)],
+                isDeletable: true,
+            ),
+            \sprintf(
+                '[%s]',
+                self::getReportLine(__FILE__, self::class, 1, true)
+            ),
+        ];
+
+        yield [
             new ReportSummary([
                 new ClassNode(__FILE__, [], self::class, 11),
                 new ClassNode(__DIR__ . '/TestCase.php', [], TestCase::class, 5),
@@ -82,11 +93,12 @@ final class GitlabReporterTest extends TestCase
         ];
     }
 
-    private static function getReportLine(string $file, string $name, int $startLine): string
+    private static function getReportLine(string $file, string $name, int $startLine, bool $isDeletable = false): string
     {
         $report = \sprintf(
-            '{"description":"The %s class is not used.","fingerprint":"%s","severity":"minor","location":{"path":"%s","lines":{"begin":%d}}}',
+            '{"description":"The %s class is not used%s.","fingerprint":"%s","severity":"minor","location":{"path":"%s","lines":{"begin":%d}}}',
             $name,
+            $isDeletable ? ' and deleted' : '',
             md5($file),
             $file,
             $startLine,
