@@ -27,9 +27,11 @@ final class ClassNodeVisitor extends NodeVisitorAbstract
     ) {}
 
     /**
-     * @param Node[] $nodes
+     * @param list<Node> $nodes
      *
-     * @return Node[]
+     * @return list<Node>
+     *
+     * @phpstan-ignore method.childParameterType, method.childParameterType
      */
     #[\Override]
     public function beforeTraverse(array $nodes): array

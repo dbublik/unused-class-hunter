@@ -13,16 +13,20 @@ use Symfony\Component\Finder\Finder;
 
 final class Cache implements CacheInterface
 {
+    /** @var non-empty-string */
     private readonly string $cacheDir;
     private readonly FileHandler $rootCacheFile;
     private bool $signatureWasUpdated = true;
 
-    /** @var list<string> */
+    /** @var list<non-empty-string> */
     private readonly array $oldFiles;
 
-    /** @var list<string> */
+    /** @var list<non-empty-string> */
     private array $newFiles = [];
 
+    /**
+     * @param non-empty-string $cacheDir
+     */
     private function __construct(
         string $cacheDir,
         private readonly Signature $signature,
@@ -119,7 +123,7 @@ final class Cache implements CacheInterface
     }
 
     /**
-     * @return list<string>
+     * @return list<non-empty-string>
      */
     private function getOldFiles(): array
     {
@@ -129,7 +133,9 @@ final class Cache implements CacheInterface
 
         $files = [];
         foreach (Finder::create()->in($directory)->files() as $file) {
-            $files[] = $file->getPathname();
+            if ('' !== $path = $file->getPathname()) {
+                $files[] = $path;
+            }
         }
 
         return $files;

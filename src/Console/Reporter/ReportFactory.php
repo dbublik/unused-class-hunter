@@ -7,7 +7,7 @@ namespace DBublik\UnusedClassHunter\Console\Reporter;
 final readonly class ReportFactory
 {
     /**
-     * @var ReporterInterface[]
+     * @var list<ReporterInterface>
      */
     private array $reporters;
 
@@ -19,6 +19,9 @@ final readonly class ReportFactory
         ];
     }
 
+    /**
+     * @param non-empty-string $format
+     */
     public function getReporter(string $format): ReporterInterface
     {
         foreach ($this->reporters as $reporter) {

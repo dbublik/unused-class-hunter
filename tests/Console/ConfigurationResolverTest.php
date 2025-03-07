@@ -87,6 +87,9 @@ final class ConfigurationResolverTest extends TestCase
         self::assertSame([self::class], $config->getIgnoredClasses());
     }
 
+    /**
+     * @param null|non-empty-string $rootDirectory
+     */
     #[DataProvider('provideGetConfigDefault')]
     public function testGetConfigDefault(?string $rootDirectory, bool $isDefaultConfig): void
     {
@@ -101,7 +104,7 @@ final class ConfigurationResolverTest extends TestCase
     }
 
     /**
-     * @return iterable<array{0: null|string, 1: bool}>
+     * @return iterable<array{0: null|non-empty-string, 1: bool}>
      */
     public static function provideGetConfigDefault(): iterable
     {
