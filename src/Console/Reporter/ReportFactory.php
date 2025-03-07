@@ -16,6 +16,7 @@ final readonly class ReportFactory
         $this->reporters = [
             new TextReporter(),
             new GitlabReporter(),
+            new GithubReporter(),
         ];
     }
 
