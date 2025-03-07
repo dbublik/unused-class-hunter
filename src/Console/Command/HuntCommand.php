@@ -82,6 +82,6 @@ final class HuntCommand extends Command
             $output->write($report, false, OutputInterface::OUTPUT_RAW);
         }
 
-        return Command::SUCCESS;
+        return [] === $unusedClasses ? Command::SUCCESS : Command::FAILURE;
     }
 }

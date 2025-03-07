@@ -138,7 +138,7 @@ final class HuntCommandTest extends TestCase
 
         try {
             $exitCode = $commandTester->execute(['--config' => $configFile, '--delete' => true]);
-            self::assertSame(Command::SUCCESS, $exitCode);
+            self::assertSame(Command::FAILURE, $exitCode);
             self::assertStringContainsString(
                 'The hunt is over! 1 unused classes deleted.',
                 $commandTester->getDisplay()
