@@ -6,10 +6,10 @@ namespace DBublik\UnusedClassHunter\Tests;
 
 use DBublik\UnusedClassHunter\Config;
 use DBublik\UnusedClassHunter\Filter\AttributeFilter;
-use DBublik\UnusedClassHunter\Filter\AutoconfigureTagAttributeFilter;
 use DBublik\UnusedClassHunter\Filter\ClassFilter;
-use DBublik\UnusedClassHunter\Filter\CodeceptionTestClassFilter;
+use DBublik\UnusedClassHunter\Filter\Codeception\CodeceptionTestClassFilter;
 use DBublik\UnusedClassHunter\Filter\FilterInterface;
+use DBublik\UnusedClassHunter\Filter\Symfony\AutoconfigureTagAttributeFilter;
 use DBublik\UnusedClassHunter\PreFilter\PreFilterInterface;
 use DBublik\UnusedClassHunter\Sets\SetInterface;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;

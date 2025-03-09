@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter\Sets;
 
 use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\Filter\AutoconfigureTagAttributeFilter;
-use DBublik\UnusedClassHunter\PreFilter\ConstraintPreFilter;
+use DBublik\UnusedClassHunter\Filter\Symfony\AutoconfigureTagAttributeFilter;
+use DBublik\UnusedClassHunter\PreFilter\Symfony\ConstraintPreFilter;
 
 final readonly class SymfonySet implements SetInterface
 {

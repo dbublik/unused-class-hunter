@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClassHunter\Tests\Filter;
+namespace DBublik\UnusedClassHunter\Tests\Filter\Symfony;
 
 use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\Filter\AutoconfigureTagAttributeFilter;
+use DBublik\UnusedClassHunter\Filter\Symfony\AutoconfigureTagAttributeFilter;
 use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\ReaderResult;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DBublik\UnusedClassHunter\Tests\Sets;
 
-use DBublik\UnusedClassHunter\Filter\CodeceptionTestClassFilter;
+use DBublik\UnusedClassHunter\Filter\Codeception\CodeceptionTestClassFilter;
 use DBublik\UnusedClassHunter\Sets\CodeceptionSet;
 use PHPUnit\Framework\Attributes\CoversClass;
 

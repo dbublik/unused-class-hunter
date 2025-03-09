@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClassHunter\Tests\PreFilter;
+namespace DBublik\UnusedClassHunter\Tests\PreFilter\Symfony;
 
 use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\PreFilter\ServiceEntityRepositoryPreFilter;
+use DBublik\UnusedClassHunter\PreFilter\Symfony\ServiceEntityRepositoryPreFilter;
 use DBublik\UnusedClassHunter\Tests\Fixtures\PreFilter\ServiceEntityRepositoryPreFilter\ExampleRepository;
 use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;

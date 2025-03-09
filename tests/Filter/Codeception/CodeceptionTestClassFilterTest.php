@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClassHunter\Tests\Filter;
+namespace DBublik\UnusedClassHunter\Tests\Filter\Codeception;
 
 use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\Filter\CodeceptionTestClassFilter;
+use DBublik\UnusedClassHunter\Filter\Codeception\CodeceptionTestClassFilter;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 use PHPUnit\Framework\Attributes\CoversClass;

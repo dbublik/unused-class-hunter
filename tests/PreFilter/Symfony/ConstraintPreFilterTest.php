@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClassHunter\Tests\PreFilter;
+namespace DBublik\UnusedClassHunter\Tests\PreFilter\Symfony;
 
 use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\PreFilter\ConstraintPreFilter;
+use DBublik\UnusedClassHunter\PreFilter\Symfony\ConstraintPreFilter;
 use DBublik\UnusedClassHunter\Tests\Fixtures\PreFilter\ConstraintPreFilter\ExampleConstraint;
 use DBublik\UnusedClassHunter\ValueObject\AbstractFileNode;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
