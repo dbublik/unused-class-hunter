@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DBublik\UnusedClassHunter\Sets;
 
 use DBublik\UnusedClassHunter\Config;
-use DBublik\UnusedClassHunter\Filter\CodeceptionTestClassFilter;
+use DBublik\UnusedClassHunter\Filter\Codeception\CodeceptionTestClassFilter;
 
 final readonly class CodeceptionSet implements SetInterface
 {

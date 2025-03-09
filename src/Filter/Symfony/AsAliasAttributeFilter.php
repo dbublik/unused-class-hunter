@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DBublik\UnusedClassHunter\Filter;
+namespace DBublik\UnusedClassHunter\Filter\Symfony;
 
+use DBublik\UnusedClassHunter\Filter\FilterInterface;
 use DBublik\UnusedClassHunter\ValueObject\ClassNode;
 use DBublik\UnusedClassHunter\ValueObject\ReaderResult;
 
