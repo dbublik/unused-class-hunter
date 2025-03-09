@@ -1,20 +1,21 @@
 {
     "require": {
-        "ergebnis/composer-normalize": "^2.45",
-        "friendsofphp/php-cs-fixer": "^3.64",
-        "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^2.1",
-        "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpstan/phpstan-phpunit": "^2.0",
-        "phpstan/phpstan-strict-rules": "^2.0",
-        "phpstan/phpstan-symfony": "^2.0",
-        "rector/rector": "^2.0"
+        "ergebnis/composer-normalize": "^2.45.0",
+        "friendsofphp/php-cs-fixer": "^3.70.2",
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan": "^2.1.7",
+        "phpstan/phpstan-deprecation-rules": "^2.0.1",
+        "phpstan/phpstan-phpunit": "^2.0.4",
+        "phpstan/phpstan-strict-rules": "^2.0.3",
+        "phpstan/phpstan-symfony": "^2.0.2",
+        "rector/rector": "^2.0.10"
     },
     "config": {
         "allow-plugins": {
             "ergebnis/composer-normalize": true,
             "phpstan/extension-installer": true
         },
+        "bump-after-update": true,
         "sort-packages": true
     }
 }
