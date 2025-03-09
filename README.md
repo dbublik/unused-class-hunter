@@ -84,7 +84,7 @@ The third option is to use one of our "filter".
 In the engine of this project we use two filters - `ClassFilter` and `AttributeFilter`.
 
 But there are other filters - for example `ApiTagFilter` (which filters classes with the tag `@api`).
-See all filters in directory `DBublik\UnusedClassHunter\Filter`.
+See all filters in directory `/src/Filter`.
 
 Or you can create your own custom filter:
 
@@ -121,6 +121,13 @@ return (new Config())
         new \ExampleNamespace\Filter\ExampleFilter(),
     );
 ```
+
+### Unignoring classes:
+
+If classes are used as false positives, you can use our pre-filter or create your own.
+It helps indicate to the Hunter that the classes should be marked as unused.
+
+For more details, see directory `/src/PreFilter`.
 
 ### Sets for some libraries:
 
@@ -200,12 +207,12 @@ List of them:
 
 ## Output format
 
-The Hunter supports `text` (by default) and `gitlab` formats.
+The Hunter supports `text` (by default), `gitlab` and `github` formats.
 
 ```bash
-./vendor/bin/unused-class-hunter hunt --format=gitlab
+./vendor/bin/unused-class-hunter hunt --format=github
 ```
 
 ## Supported PHP versions
 
-PHP 8.3 and later.
+PHP 8.2 and later.
