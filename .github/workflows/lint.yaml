@@ -54,7 +54,7 @@ jobs:
                         run: composer hunter -- --ansi --format=github
 
                     -   name: "Rector"
-                        run: composer rector -- --ansi --output-format=github
+                        run: composer rector:check -- --ansi --output-format=github
 
         steps:
             -   name: "Checkout code"
