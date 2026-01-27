@@ -18,7 +18,7 @@
     "require-dev": {
         "infection/infection": "^0.29.14",
         "php-coveralls/php-coveralls": "^2.7.0",
-        "phpunit/phpunit": "^11.5.12"
+        "phpunit/phpunit": "^11.5.50"
     },
     "autoload": {
         "psr-4": {
